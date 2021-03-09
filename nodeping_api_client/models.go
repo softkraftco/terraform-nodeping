@@ -18,3 +18,15 @@ type Contact struct {
 	Custrole   string             `json:"custrole"`
 	Addresses  map[string]Address `json:"addresses"`
 }
+
+type NewContact struct {
+	/*
+		New contacts don't have IDs, and use "newaddresses" array instead of
+		"addresses" map.
+	*/
+	Type       string    `json:"type"`
+	CustomerId string    `json:"customer_id"`
+	Name       string    `json:"name"`
+	Custrole   string    `json:"custrole"`
+	Addresses  []Address `json:"newaddresses"`
+}
