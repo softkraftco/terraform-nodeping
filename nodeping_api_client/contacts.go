@@ -28,3 +28,10 @@ func (client *Client) GetContact(Id string) (*Contact, error) {
 
 	return &contact, nil
 }
+
+func (client *Client) DeleteContact(Id string) error {
+	req, err := http.NewRequest("DELETE",
+		fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
+	_, err = client.doRequest(req)
+	return err
+}
