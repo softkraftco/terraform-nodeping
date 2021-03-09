@@ -19,7 +19,9 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("NODEPING_API_TOKEN", nil),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"nodeping_contact": resourceContact(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"nodeping_contact": dataSourceContact(),
 		},
