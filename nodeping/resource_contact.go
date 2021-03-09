@@ -112,8 +112,21 @@ func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interf
 }
 
 func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*nodeping_api_client.Client)
+
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
+
+	contactID := d.Id()
+
+	err := client.DeleteContact(contactID)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	// d.SetId("") is automatically called assuming delete returns no errors, but
+	// it is added here for explicitness.
+	d.SetId("")
 
 	return diags
 }
