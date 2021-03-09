@@ -16,8 +16,6 @@ func resourceContact() *schema.Resource {
 		UpdateContext: resourceContactUpdate,
 		DeleteContext: resourceContactDelete,
 		Schema: map[string]*schema.Schema{
-			//"id":          &schema.Schema{Type: schema.TypeString, Required: true},
-			//"type":        &schema.Schema{Type: schema.TypeString, Required: true},
 			"customer_id": &schema.Schema{Type: schema.TypeString, Optional: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true},
@@ -26,7 +24,7 @@ func resourceContact() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						//"id":            &schema.Schema{Type: schema.TypeString, Required: true},
+						"id":            &schema.Schema{Type: schema.TypeString, Computed: true},
 						"address":       &schema.Schema{Type: schema.TypeString, Required: true},
 						"type":          &schema.Schema{Type: schema.TypeString, Required: true},
 						"suppressup":    &schema.Schema{Type: schema.TypeBool, Optional: true},
@@ -53,7 +51,6 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 
 	// map resource into Contact
 	var contact nodeping_api_client.NewContact
-	//contact.Type = d.Get("type").(string)
 	contact.CustomerId = d.Get("customer_id").(string)
 	contact.Name = d.Get("name").(string)
 	contact.Custrole = d.Get("custrole").(string)

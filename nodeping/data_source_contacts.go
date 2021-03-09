@@ -40,7 +40,6 @@ func flattenAddresses(addresses *map[string]nodeping_api_client.Address) []inter
 	flattenedAddresses := make([]interface{}, len(*addresses), len(*addresses))
 	i := 0
 	for addressId, address := range *addresses {
-		println(i, addressId, address.Address)
 		flattenedAddress := make(map[string]interface{})
 		flattenedAddress["id"] = addressId
 		flattenedAddress["address"] = address.Address
