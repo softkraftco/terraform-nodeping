@@ -63,6 +63,44 @@ func (client *Client) CreateContact(contact *NewContact) (*Contact, error) {
 	return &newContact, nil
 }
 
+func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
+	/*
+		Updates an existing contact.
+
+		Note about addresses from nodeping documentation:
+		> When updating existing addresses, the entire list is required.
+		> Entries missing from the object are removed from the contact [...].
+		> Adding non-existing address IDs to the list will generate an error.
+	*/
+	// TODO: handle contacts/new contacts issue
+
+	rb, err := json.Marshal(contact)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT",
+		fmt.Sprintf("%s/contacts", client.HostURL),
+		strings.NewReader(string(rb)))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	body, err := client.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	newContact := Contact{}
+	err = json.Unmarshal(body, &newContact)
+	if err != nil {
+		return nil, err
+	}
+
+	return &newContact, nil
+}
+
 func (client *Client) DeleteContact(Id string) error {
 	req, err := http.NewRequest("DELETE",
 		fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
