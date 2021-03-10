@@ -31,14 +31,14 @@ func resourceContact() *schema.Resource {
 						"suppressdown":  &schema.Schema{Type: schema.TypeBool, Optional: true},
 						"suppressfirst": &schema.Schema{Type: schema.TypeBool, Optional: true},
 						"suppressall":   &schema.Schema{Type: schema.TypeBool, Optional: true},
+						// webhooks related attributes
+						"action":       &schema.Schema{Type: schema.TypeString, Optional: true},
+						"data":         &schema.Schema{Type: schema.TypeString, Optional: true},
+						"headers":      &schema.Schema{Type: schema.TypeString, Optional: true},
+						"querystrings": &schema.Schema{Type: schema.TypeString, Optional: true},
 					},
 				},
 			},
-			// webhooks related attributes
-			"action":       &schema.Schema{Type: schema.TypeString, Optional: true},
-			"data":         &schema.Schema{Type: schema.TypeString, Optional: true},
-			"headers":      &schema.Schema{Type: schema.TypeString, Optional: true},
-			"querystrings": &schema.Schema{Type: schema.TypeString, Optional: true},
 		},
 	}
 }
