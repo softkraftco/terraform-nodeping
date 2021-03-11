@@ -2,12 +2,16 @@ package nodeping_api_client
 
 type Address struct {
 	ID            string
-	Address       string `json:"address"`
-	Type          string `json:"type"`
-	Suppressup    bool   `json:"accountsuppressup"`
-	Suppressdown  bool   `json:"accountsuppressdown"`
-	Suppressfirst bool   `json:"accountsuppressfirst"`
-	Suppressall   bool   `json:"accountsuppressall"`
+	Address       string            `json:"address"`
+	Type          string            `json:"type"`
+	Suppressup    bool              `json:"accountsuppressup"`
+	Suppressdown  bool              `json:"accountsuppressdown"`
+	Suppressfirst bool              `json:"accountsuppressfirst"`
+	Suppressall   bool              `json:"accountsuppressall"`
+	Action        string            `json:"action"`
+	Data          map[string]string `json:"data"`
+	Headers       map[string]string `json:"headers"`
+	Querystrings  map[string]string `json:"querystrings"`
 }
 
 type Contact struct {

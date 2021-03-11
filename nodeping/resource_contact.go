@@ -33,9 +33,9 @@ func resourceContact() *schema.Resource {
 						"suppressall":   &schema.Schema{Type: schema.TypeBool, Optional: true},
 						// webhooks related attributes
 						"action":       &schema.Schema{Type: schema.TypeString, Optional: true},
-						"data":         &schema.Schema{Type: schema.TypeString, Optional: true},
-						"headers":      &schema.Schema{Type: schema.TypeString, Optional: true},
-						"querystrings": &schema.Schema{Type: schema.TypeString, Optional: true},
+						"data":         &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						"headers":      &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						"querystrings": &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 					},
 				},
 			},
@@ -59,6 +59,22 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 	addresses := make([]nodeping_api_client.Address, len(addrs))
 	for i, addr := range addrs {
 		a := addr.(map[string]interface{})
+
+		// convert "data", "headers" and "querystrings" from interface{}
+		// to map[string]string
+		data := make(map[string]string)
+		for key, val := range a["data"].(map[string]interface{}) {
+			data[key] = val.(string)
+		}
+		headers := make(map[string]string)
+		for key, val := range a["headers"].(map[string]interface{}) {
+			headers[key] = val.(string)
+		}
+		querystrings := make(map[string]string)
+		for key, val := range a["querystrings"].(map[string]interface{}) {
+			querystrings[key] = val.(string)
+		}
+
 		address := nodeping_api_client.Address{
 			Address:       a["address"].(string),
 			Type:          a["type"].(string),
@@ -66,6 +82,10 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 			Suppressdown:  a["suppressdown"].(bool),
 			Suppressfirst: a["suppressfirst"].(bool),
 			Suppressall:   a["suppressall"].(bool),
+			Action:        a["action"].(string),
+			Data:          data,
+			Headers:       headers,
+			Querystrings:  querystrings,
 		}
 		addresses[i] = address
 	}
