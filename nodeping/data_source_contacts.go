@@ -48,6 +48,10 @@ func flattenAddresses(addresses *map[string]nodeping_api_client.Address) []inter
 		flattenedAddress["suppressdown"] = address.Suppressdown
 		flattenedAddress["suppressfirst"] = address.Suppressfirst
 		flattenedAddress["suppressall"] = address.Suppressall
+		flattenedAddress["action"] = address.Action
+		flattenedAddress["data"] = address.Data
+		flattenedAddress["headers"] = address.Headers
+		flattenedAddress["querystrings"] = address.Querystrings
 
 		flattenedAddresses[i] = flattenedAddress
 		i++
@@ -77,6 +81,11 @@ func dataSourceContact() *schema.Resource {
 						"suppressdown":  &schema.Schema{Type: schema.TypeBool, Computed: true},
 						"suppressfirst": &schema.Schema{Type: schema.TypeBool, Computed: true},
 						"suppressall":   &schema.Schema{Type: schema.TypeBool, Computed: true},
+						// webhooks related attributes
+						"action":       &schema.Schema{Type: schema.TypeString, Optional: true},
+						"data":         &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						"headers":      &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						"querystrings": &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 					},
 				},
 			},
