@@ -20,7 +20,7 @@ func resourceContact() *schema.Resource {
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true},
 			"addresses": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -55,7 +55,7 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 	contact.Name = d.Get("name").(string)
 	contact.Custrole = d.Get("custrole").(string)
 
-	addrs := d.Get("addresses").([]interface{})
+	addrs := d.Get("addresses").(*schema.Set).List()
 	addresses := make([]nodeping_api_client.Address, len(addrs))
 	for i, addr := range addrs {
 		a := addr.(map[string]interface{})
