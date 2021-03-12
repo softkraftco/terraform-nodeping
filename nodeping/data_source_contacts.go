@@ -70,7 +70,7 @@ func dataSourceContact() *schema.Resource {
 			"name":        &schema.Schema{Type: schema.TypeString, Computed: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Computed: true},
 			"addresses": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
