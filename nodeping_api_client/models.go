@@ -18,12 +18,13 @@ type Address struct {
 }
 
 type Contact struct {
-	ID         string             `json:"_id"`
-	Type       string             `json:"type"`
-	CustomerId string             `json:"customer_id"`
-	Name       string             `json:"name"`
-	Custrole   string             `json:"custrole"`
-	Addresses  map[string]Address `json:"addresses"`
+	ID           string             `json:"_id"`
+	Type         string             `json:"type"`
+	CustomerId   string             `json:"customer_id"`
+	Name         string             `json:"name"`
+	Custrole     string             `json:"custrole"`
+	Addresses    map[string]Address `json:"addresses"`
+	NewAddresses []Address          `json:"newaddresses"`
 }
 
 type NewContact struct {
