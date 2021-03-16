@@ -52,6 +52,7 @@ func flattenAddresses(addresses *map[string]nodeping_api_client.Address) []inter
 		flattenedAddress["data"] = address.Data
 		flattenedAddress["headers"] = address.Headers
 		flattenedAddress["querystrings"] = address.Querystrings
+		flattenedAddress["priority"] = address.Priority
 
 		flattenedAddresses[i] = flattenedAddress
 		i++
@@ -86,6 +87,8 @@ func dataSourceContact() *schema.Resource {
 						"data":         &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"headers":      &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"querystrings": &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						// pushover attributes
+						"priority": &schema.Schema{Type: schema.TypeInt, Optional: true},
 					},
 				},
 			},

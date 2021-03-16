@@ -36,6 +36,8 @@ func resourceContact() *schema.Resource {
 						"data":         &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"headers":      &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"querystrings": &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
+						// pushover attributes
+						"priority": &schema.Schema{Type: schema.TypeInt, Optional: true},
 					},
 				},
 			},
@@ -86,6 +88,7 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 			Data:          data,
 			Headers:       headers,
 			Querystrings:  querystrings,
+			Priority:      a["priority"].(int),
 		}
 		addresses[i] = address
 	}
