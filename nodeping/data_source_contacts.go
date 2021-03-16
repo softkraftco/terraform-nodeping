@@ -12,8 +12,6 @@ import (
 func dataSourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	var diags diag.Diagnostics
-
 	contact, err := client.GetContact(d.Get("id").(string))
 	if err != nil {
 		return diag.FromErr(err)
@@ -29,6 +27,8 @@ func dataSourceContactRead(ctx context.Context, d *schema.ResourceData, m interf
 	if err := d.Set("addresses", &addresses); err != nil {
 		return diag.FromErr(err)
 	}
+
+	var diags diag.Diagnostics
 	return diags
 }
 

@@ -16,7 +16,7 @@ func resourceContact() *schema.Resource {
 		UpdateContext: resourceContactUpdate,
 		DeleteContext: resourceContactDelete,
 		Schema: map[string]*schema.Schema{
-			"customer_id": &schema.Schema{Type: schema.TypeString, Optional: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true},
 			"addresses": &schema.Schema{
@@ -45,22 +45,21 @@ func resourceContact() *schema.Resource {
 	}
 }
 
-func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	client := m.(*nodeping_api_client.Client)
-
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	// map resource into Contact
-	var contact nodeping_api_client.NewContact
+func getContactFromSchema(d *schema.ResourceData) *nodeping_api_client.Contact {
+	var contact nodeping_api_client.Contact
+	contact.ID = d.Id()
 	contact.CustomerId = d.Get("customer_id").(string)
 	contact.Name = d.Get("name").(string)
 	contact.Custrole = d.Get("custrole").(string)
 
 	addrs := d.Get("addresses").(*schema.Set).List()
-	addresses := make([]nodeping_api_client.Address, len(addrs))
-	for i, addr := range addrs {
+	addresses := make(map[string]nodeping_api_client.Address)
+	newAddresses := make([]nodeping_api_client.Address, 0)
+	for _, addr := range addrs {
 		a := addr.(map[string]interface{})
+
+		// get address Id (if present)
+		addressId := a["id"].(string)
 
 		// convert "data", "headers" and "querystrings" from interface{}
 		// to map[string]string
@@ -78,6 +77,7 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 		}
 
 		address := nodeping_api_client.Address{
+			ID:            a["id"].(string),
 			Address:       a["address"].(string),
 			Type:          a["type"].(string),
 			Suppressup:    a["suppressup"].(bool),
@@ -90,56 +90,73 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 			Querystrings:  querystrings,
 			Priority:      a["priority"].(int),
 		}
-		addresses[i] = address
+
+		// addresses that have an id go to addresses, the ones that don't,
+		// go to new addresses
+		if len(addressId) > 0 {
+			addresses[addressId] = address
+		} else {
+			newAddresses = append(newAddresses, address)
+		}
 	}
 	contact.Addresses = addresses
+	contact.NewAddresses = newAddresses
 
-	savedContact, err := client.CreateContact(&contact)
+	return &contact
+}
+
+func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*nodeping_api_client.Client)
+
+	contact := getContactFromSchema(d)
+
+	savedContact, err := client.CreateContact(contact)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(savedContact.ID)
-	resourceContactRead(ctx, d, m)
-
-	return diags
+	return resourceContactRead(ctx, d, m)
 }
 
 func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
 	contact, err := client.GetContact(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	d.SetId(contact.ID)
+	d.Set("customer_id", contact.CustomerId)
+	d.Set("name", contact.Name)
+	d.Set("custrole", contact.Custrole)
 
 	addresses := flattenAddresses(&contact.Addresses)
 	if err := d.Set("addresses", addresses); err != nil {
 		return diag.FromErr(err)
 	}
 
+	var diags diag.Diagnostics
 	return diags
 }
 
 func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	client := m.(*nodeping_api_client.Client)
 
-	return diags
+	contact := getContactFromSchema(d)
+
+	_, err := client.UpdateContact(contact)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	return resourceContactRead(ctx, d, m)
 }
 
 func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	contactID := d.Id()
-
-	err := client.DeleteContact(contactID)
+	err := client.DeleteContact(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -148,5 +165,6 @@ func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interf
 	// it is added here for explicitness.
 	d.SetId("")
 
+	var diags diag.Diagnostics
 	return diags
 }

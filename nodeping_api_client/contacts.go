@@ -31,12 +31,23 @@ func (client *Client) GetContact(Id string) (*Contact, error) {
 	return &contact, nil
 }
 
-func (client *Client) CreateContact(contact *NewContact) (*Contact, error) {
+func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
 	/*
 		Creates a new contact, along with all needed addresses
 	*/
 
-	rb, err := json.Marshal(contact)
+	// API throws an error if POST request json contains "addresses" key, even
+	// if it is just an empty list. Therefore rewritting contact to NewContact
+	// type, that doesn't have "addresses".
+	nc := NewContact{
+		Type:       contact.Type,
+		CustomerId: contact.CustomerId,
+		Name:       contact.Name,
+		Custrole:   contact.Custrole,
+		Addresses:  contact.NewAddresses,
+	}
+
+	rb, err := json.Marshal(nc)
 	if err != nil {
 		return nil, err
 	}
@@ -72,15 +83,15 @@ func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
 		> Entries missing from the object are removed from the contact [...].
 		> Adding non-existing address IDs to the list will generate an error.
 	*/
-	// TODO: handle contacts/new contacts issue
-
 	rb, err := json.Marshal(contact)
 	if err != nil {
 		return nil, err
 	}
 
+	// although json already contains contact "_id", the API seems to require
+	// "id" this time, so it's easier to simply add id to url.
 	req, err := http.NewRequest("PUT",
-		fmt.Sprintf("%s/contacts", client.HostURL),
+		fmt.Sprintf("%s/contacts/%s", client.HostURL, contact.ID),
 		strings.NewReader(string(rb)))
 	if err != nil {
 		return nil, err
