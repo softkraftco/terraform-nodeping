@@ -35,19 +35,7 @@ func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
 	/*
 		Creates a new contact, along with all needed addresses
 	*/
-
-	// API throws an error if POST request json contains "addresses" key, even
-	// if it is just an empty list. Therefore rewritting contact to NewContact
-	// type, that doesn't have "addresses".
-	nc := NewContact{
-		Type:       contact.Type,
-		CustomerId: contact.CustomerId,
-		Name:       contact.Name,
-		Custrole:   contact.Custrole,
-		Addresses:  contact.NewAddresses,
-	}
-
-	rb, err := json.Marshal(nc)
+	rb, err := json.Marshal(contact)
 	if err != nil {
 		return nil, err
 	}
