@@ -1,7 +1,7 @@
 package nodeping_api_client
 
 type Address struct {
-	ID            string `json:"id"`
+	ID            string `json:"id,omitempty"`
 	Address       string `json:"address"`
 	Type          string `json:"type"`
 	Suppressup    bool   `json:"accountsuppressup"`
@@ -9,32 +9,20 @@ type Address struct {
 	Suppressfirst bool   `json:"accountsuppressfirst"`
 	Suppressall   bool   `json:"accountsuppressall"`
 	// webhook attribures
-	Action       string            `json:"action"`
-	Data         map[string]string `json:"data"`
-	Headers      map[string]string `json:"headers"`
-	Querystrings map[string]string `json:"querystrings"`
+	Action       string            `json:"action,omitempty"`
+	Data         map[string]string `json:"data,omitempty"`
+	Headers      map[string]string `json:"headers,omitempty"`
+	Querystrings map[string]string `json:"querystrings,omitempty"`
 	// pushover attributes
 	Priority int `json:"priority"`
 }
 
 type Contact struct {
-	ID           string             `json:"_id"`
-	Type         string             `json:"type"`
-	CustomerId   string             `json:"customer_id"`
-	Name         string             `json:"name"`
-	Custrole     string             `json:"custrole"`
-	Addresses    map[string]Address `json:"addresses"`
-	NewAddresses []Address          `json:"newaddresses"`
-}
-
-type NewContact struct {
-	/*
-		New contacts don't have IDs, and use "newaddresses" array instead of
-		"addresses" map.
-	*/
-	Type       string    `json:"type"`
-	CustomerId string    `json:"customer_id"`
-	Name       string    `json:"name"`
-	Custrole   string    `json:"custrole"`
-	Addresses  []Address `json:"newaddresses"`
+	ID           string             `json:"_id,omitempty"`
+	Type         string             `json:"type,omitempty"`
+	CustomerId   string             `json:"customer_id,omitempty"`
+	Name         string             `json:"name,omitempty"`
+	Custrole     string             `json:"custrole,omitempty"`
+	Addresses    map[string]Address `json:"addresses,omitempty"`
+	NewAddresses []Address          `json:"newaddresses,omitempty"`
 }

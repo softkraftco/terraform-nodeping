@@ -49,9 +49,16 @@ func flattenAddresses(addresses *map[string]nodeping_api_client.Address) []inter
 		flattenedAddress["suppressfirst"] = address.Suppressfirst
 		flattenedAddress["suppressall"] = address.Suppressall
 		flattenedAddress["action"] = address.Action
-		flattenedAddress["data"] = address.Data
-		flattenedAddress["headers"] = address.Headers
-		flattenedAddress["querystrings"] = address.Querystrings
+		if len(address.Data) > 0 {
+			flattenedAddress["data"] = address.Data
+		}
+		if len(address.Headers) > 0 {
+			flattenedAddress["headers"] = address.Headers
+		}
+		if len(address.Querystrings) > 0 {
+
+			flattenedAddress["querystrings"] = address.Querystrings
+		}
 		flattenedAddress["priority"] = address.Priority
 
 		flattenedAddresses[i] = flattenedAddress
