@@ -5,11 +5,17 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"terraform-nodeping/nodeping_api_client"
 )
 
 func resourceContact() *schema.Resource {
+	// prepare accepted values for validation
+	addressTypes := []string{"email", "sms", "webhook", "slack", "hipchat", "pushover", "pagerduty", "voice"}
+	custroles := []string{"owner", "edit", "view", "notify"}
+	webhookActions := []string{"GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"}
+
 	return &schema.Resource{
 		CreateContext: resourceContactCreate,
 		ReadContext:   resourceContactRead,
@@ -18,7 +24,7 @@ func resourceContact() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
-			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true},
+			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice(custroles, false)},
 			"addresses": &schema.Schema{
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -26,18 +32,18 @@ func resourceContact() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"id":            &schema.Schema{Type: schema.TypeString, Computed: true},
 						"address":       &schema.Schema{Type: schema.TypeString, Required: true},
-						"type":          &schema.Schema{Type: schema.TypeString, Required: true},
+						"type":          &schema.Schema{Type: schema.TypeString, Required: true, ValidateFunc: validation.StringInSlice(addressTypes, false)},
 						"suppressup":    &schema.Schema{Type: schema.TypeBool, Optional: true},
 						"suppressdown":  &schema.Schema{Type: schema.TypeBool, Optional: true},
 						"suppressfirst": &schema.Schema{Type: schema.TypeBool, Optional: true},
 						"suppressall":   &schema.Schema{Type: schema.TypeBool, Optional: true},
 						// webhooks related attributes
-						"action":       &schema.Schema{Type: schema.TypeString, Optional: true},
+						"action":       &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice(webhookActions, false)},
 						"data":         &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"headers":      &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						"querystrings": &schema.Schema{Type: schema.TypeMap, Optional: true, Elem: schema.TypeString},
 						// pushover attributes
-						"priority": &schema.Schema{Type: schema.TypeInt, Optional: true},
+						"priority": &schema.Schema{Type: schema.TypeInt, Optional: true, ValidateFunc: validation.IntBetween(-2, 2)},
 					},
 				},
 			},
