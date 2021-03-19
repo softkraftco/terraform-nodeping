@@ -1,0 +1,27 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.1"
+      source  = "softkraft.co/proj/nodeping"
+    }
+  }
+}
+
+resource "nodeping_contact" "first_contact"{
+	custrole = "owner"
+	name = "First"
+	addresses {
+		address = "first@o1.com"
+		type = "email"
+	}
+	addresses {
+		address = "first.eu"
+		type = "pushover"
+		priority = 2
+	}
+}
+
+
+output "first_contact_id" {
+	value = nodeping_contact.first_contact.id
+}

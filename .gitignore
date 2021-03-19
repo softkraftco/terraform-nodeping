@@ -1,7 +1,7 @@
 vendor/
 
-example/.terraform/
-example/terraform.tfstate
-example/terraform.tfstate.backup
-example/.terraform.lock.hcl
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
 
