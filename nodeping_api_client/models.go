@@ -6,10 +6,10 @@ type Address struct {
 	ID            string `json:"id,omitempty"`
 	Address       string `json:"address"`
 	Type          string `json:"type"`
-	Suppressup    bool   `json:"accountsuppressup"`
-	Suppressdown  bool   `json:"accountsuppressdown"`
-	Suppressfirst bool   `json:"accountsuppressfirst"`
-	Suppressall   bool   `json:"accountsuppressall"`
+	Suppressup    bool   `json:"suppressup"`
+	Suppressdown  bool   `json:"suppressdown"`
+	Suppressfirst bool   `json:"suppressfirst"`
+	Suppressall   bool   `json:"suppressall"`
 	// webhook attribures
 	Action       string            `json:"action,omitempty"`
 	Data         map[string]string `json:"data,omitempty"`
