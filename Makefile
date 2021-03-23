@@ -12,5 +12,5 @@ install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
-run_tests:
-	go test -v ./nodeping
+run_tests: install
+	go test -v -count=1 -timeout 30m ./nodeping
