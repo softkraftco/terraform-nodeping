@@ -97,12 +97,16 @@ func getContactFromSchema(d *schema.ResourceData) *nodeping_api_client.Contact {
 			Priority:      a["priority"].(int),
 		}
 
-		// addresses that have an id go to addresses, the ones that don't,
-		// go to new addresses
-		if len(addressId) > 0 {
-			addresses[addressId] = address
-		} else {
-			newAddresses = append(newAddresses, address)
+		// for lack of better documentation, I assume that addresses without a
+		// type are the ones that got deleted
+		if len(address.Type) != 0 {
+			// addresses that have an id go to addresses, the ones that don't,
+			// go to new addresses
+			if len(addressId) > 0 {
+				addresses[addressId] = address
+			} else {
+				newAddresses = append(newAddresses, address)
+			}
 		}
 	}
 	contact.Addresses = addresses
