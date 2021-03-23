@@ -35,7 +35,7 @@ func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
 	/*
 		Creates a new contact, along with all needed addresses
 	*/
-	rb, err := json.Marshal(contact)
+	rb, err := contact.MarshalJSONForCreate()
 	if err != nil {
 		return nil, err
 	}
