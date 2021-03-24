@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+type ContactNotExists struct {
+	contactId string
+}
+
+func (err *ContactNotExists) Error() string {
+	return fmt.Sprintf("Contact '%s' does not exist.", err.contactId)
+}
+
 func (client *Client) GetContact(Id string) (*Contact, error) {
 	/*
 		Returns a list of all contacts
@@ -20,6 +28,11 @@ func (client *Client) GetContact(Id string) (*Contact, error) {
 	body, err := client.doRequest(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if string(body) == "{}" {
+		e := ContactNotExists{Id}
+		return nil, &e
 	}
 
 	contact := Contact{}
