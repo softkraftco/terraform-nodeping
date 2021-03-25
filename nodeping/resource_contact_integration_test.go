@@ -203,7 +203,7 @@ func cleanupTerraformDir(terraformDir string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, fileName := range []string{".terraform.lock.hcl", "main.tf"
+	for _, fileName := range []string{".terraform.lock.hcl", "main.tf",
 		"terraform.tfstate", "terraform.tfstate.backup"} {
 		err = os.Remove(terraformDir + "/" + fileName)
 		if err != nil {
