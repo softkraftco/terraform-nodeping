@@ -36,7 +36,7 @@ type Contact struct {
 
 func (c *Contact) MarshalJSONForCreate() ([]byte, error) {
 	/*
-		When calling API to create a new contract, passed json coject is not
+		When calling API to create a new contract, passed json object is not
 		allowed to have "addresses" field, and doesn't need the "id" field.
 	*/
 	return json.Marshal(struct {

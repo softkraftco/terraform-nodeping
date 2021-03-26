@@ -64,10 +64,14 @@ output "contact" {
 
 Just like in case of normal use, `NODEPING_API_TOKEN` environmental variable needs to be set.
 
+It will be usefull, from a developers stand point, to also set `TF_LOG=DEBUG`. More info (here)[https://www.terraform.io/docs/internals/debugging.html].
+
 This project includes a Makefile to ease standard every day tasks. Currently this includes three commands:
 - `make build` - builds the package,
 - `make install` - builds the package, and moves it to terraform plugins (this assumes `OS_ARCH=linux_amd64`, edit the Makefile if otherwise),
 - `make test` - re-installs the provider, and runs tests.
+
+TODO: OS_ARCH as environment variable.
 
 Note that terraform keeps a checksum of providers in projects state, so after every plugin re-installation terraform state needs to be reset.
 
