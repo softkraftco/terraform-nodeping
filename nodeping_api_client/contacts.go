@@ -17,7 +17,7 @@ func (err *ContactNotExists) Error() string {
 
 func (client *Client) GetContact(Id string) (*Contact, error) {
 	/*
-		Returns a list of all contacts
+		Returns a single contact.
 	*/
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
@@ -114,6 +114,9 @@ func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
 }
 
 func (client *Client) DeleteContact(Id string) error {
+	/*
+		Deletes an existing contact
+	*/
 	req, err := http.NewRequest("DELETE",
 		fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
 	_, err = client.doRequest(req)
