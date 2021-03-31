@@ -32,7 +32,7 @@ func (client *Client) CreateCheck(ctx context.Context, checkUpdate *CheckUpdate)
 		Creates a new check.
 		Returns a new chec object based on API response.
 	*/
-	requestBody, err := json.Marshal(check)
+	requestBody, err := json.Marshal(checkUpdate)
 	if err != nil {
 		return nil, err
 	}

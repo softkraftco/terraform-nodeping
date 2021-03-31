@@ -21,6 +21,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"nodeping_contact": resourceContact(),
+			"nodeping_check":   resourceCheck(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"nodeping_contact": dataSourceContact(),
