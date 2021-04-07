@@ -146,6 +146,11 @@ func (client *Client) sendRequest(request *http.Request) ([]byte, error) {
 	// error handling
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("status: %d, body: %s", response.StatusCode, body)
+	} else if strings.HasPrefix(string(body), "{\"error\"") {
+		// It happens that nodeping API resonses with status 200, but an error
+		// written into response body (ie. `{"error":"A target is required."}`).
+		// Raise an error in such a case.
+		return nil, fmt.Errorf("response content indicates an error: `%s`", body)
 	}
 
 	return body, err
