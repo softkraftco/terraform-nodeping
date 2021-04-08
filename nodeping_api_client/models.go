@@ -136,3 +136,9 @@ type CheckField struct {
 	Min  int    `json:"min"`
 	Max  int    `json:"max"`
 }
+
+type Schedule struct {
+	Name       string                            `json:"id,omitempty"`
+	CustomerId string                            `json:"customer_id,omitempty"`
+	Data       map[string]map[string]interface{} `json:"data,omitempty"`
+}
