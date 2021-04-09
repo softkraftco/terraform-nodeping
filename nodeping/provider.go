@@ -33,6 +33,5 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	client := nodeping_api_client.NewClient(d.Get("token").(string))
-	var diags diag.Diagnostics // TODO: is diags really needed?
-	return client, diags
+	return client, nil
 }
