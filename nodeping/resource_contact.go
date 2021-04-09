@@ -136,6 +136,7 @@ func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interfac
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
 	d.SetId(contact.ID)
 	d.Set("customer_id", contact.CustomerId)
 	d.Set("name", contact.Name)
@@ -146,8 +147,7 @@ func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interfac
 		return diag.FromErr(err)
 	}
 
-	var diags diag.Diagnostics
-	return diags
+	return nil
 }
 
 func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -175,6 +175,5 @@ func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interf
 	// it is added here for explicitness.
 	d.SetId("")
 
-	var diags diag.Diagnostics
-	return diags
+	return nil
 }

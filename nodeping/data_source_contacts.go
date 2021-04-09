@@ -28,8 +28,7 @@ func dataSourceContactRead(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	var diags diag.Diagnostics
-	return diags
+	return nil
 }
 
 func flattenAddresses(addresses *map[string]nodeping_api_client.Address) []interface{} {
