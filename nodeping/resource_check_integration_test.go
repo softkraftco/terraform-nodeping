@@ -2,7 +2,6 @@ package nodeping
 
 import (
 	"context"
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -17,6 +16,10 @@ import (
 func TestTerraformCheckLifeCycle(t *testing.T) {
 	const terraformDir = "testdata/checks_integration"
 	const terraformMainFile = terraformDir + "/main.tf"
+
+	// create main.tf
+	copyFile(terraformDir+"/http_step_1", terraformMainFile)
+
 	// initialize terraform
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: terraformDir,
@@ -33,7 +36,6 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	// -----------------------------------
 	// create a single HTTP check
-	copyFile(terraformDir+"/step_1", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
 	firstAddressId := terraform.Output(t, terraformOptions, "first_address_id")
@@ -144,29 +146,4 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	// -----------------------------------
 	// destroy
 	terraform.Destroy(t, terraformOptions)
-}
-
-func copyFile(src, dst string) { // TODO: don't copy this
-	data, err := ioutil.ReadFile(src)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = ioutil.WriteFile(dst, data, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func cleanupTerraformDir(terraformDir string) {
-	err := os.RemoveAll(terraformDir + "/.terraform")
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, fileName := range []string{".terraform.lock.hcl", "main.tf",
-		"terraform.tfstate", "terraform.tfstate.backup"} {
-		err = os.Remove(terraformDir + "/" + fileName)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
 }

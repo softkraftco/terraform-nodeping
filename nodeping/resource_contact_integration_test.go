@@ -1,7 +1,6 @@
 package nodeping
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -15,6 +14,10 @@ import (
 func TestTerraformContactLifeCycle(t *testing.T) {
 	const terraformDir = "testdata/contacts_integration"
 	const terraformMainFile = terraformDir + "/main.tf"
+
+	// create main.tf
+	copyFile(terraformDir+"/step_1", terraformMainFile)
+
 	// initialize terraform
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: terraformDir,
@@ -30,7 +33,6 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 
 	// -----------------------------------
 	// create a single contact
-	copyFile(terraformDir+"/step_1", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
 	firstContractId := terraform.Output(t, terraformOptions, "first_contact_id")
 	firstContact, err := client.GetContact(firstContractId)
@@ -183,31 +185,6 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 			// this is correct
 		default:
 			log.Fatal(e)
-		}
-	}
-}
-
-func copyFile(src, dst string) {
-	data, err := ioutil.ReadFile(src)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = ioutil.WriteFile(dst, data, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func cleanupTerraformDir(terraformDir string) {
-	err := os.RemoveAll(terraformDir + "/.terraform")
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, fileName := range []string{".terraform.lock.hcl", "main.tf",
-		"terraform.tfstate", "terraform.tfstate.backup"} {
-		err = os.Remove(terraformDir + "/" + fileName)
-		if err != nil {
-			log.Fatal(err)
 		}
 	}
 }
