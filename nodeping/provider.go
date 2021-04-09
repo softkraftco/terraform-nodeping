@@ -20,8 +20,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"nodeping_contact": resourceContact(),
-			"nodeping_check":   resourceCheck(),
+			"nodeping_contact":  resourceContact(),
+			"nodeping_check":    resourceCheck(),
+			"nodeping_schedule": resourceSchedule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"nodeping_contact": dataSourceContact(),
