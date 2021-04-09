@@ -1,0 +1,57 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.1"
+      source  = "softkraft.co/proj/nodeping"
+    }
+  }
+}
+
+resource "nodeping_schedule" "fitst_schedule"{
+	name = "FirstSchedule"
+	data {
+		day = "monday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "tuesday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "wednesday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "thursday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "friday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "saturday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = true
+	}
+	data {
+		day = "sunday"
+		allday = true
+	}
+}
+
+
+output "first_schedule_name" {
+	value = nodeping_schedule.fitst_schedule.name
+}
