@@ -26,7 +26,7 @@ func resourceContact() *schema.Resource {
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice(custroles, false)},
 			"addresses": &schema.Schema{
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -58,7 +58,7 @@ func getContactFromSchema(d *schema.ResourceData) *nodeping_api_client.Contact {
 	contact.Name = d.Get("name").(string)
 	contact.Custrole = d.Get("custrole").(string)
 
-	addrs := d.Get("addresses").(*schema.Set).List()
+	addrs := d.Get("addresses").([]interface{})
 	addresses := make(map[string]nodeping_api_client.Address)
 	newAddresses := make([]nodeping_api_client.Address, 0)
 	for _, addr := range addrs {
