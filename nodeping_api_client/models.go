@@ -34,7 +34,7 @@ type Check struct {
 	Runlocations  []string                  `json:"runlocations,omitempty"`
 	Created       int                       `json:"created,omitempty"`
 	Modified      int                       `json:"modified,omitempty"`
-	Queue         string                    `json:"queue,omitempty"`
+	Queue         interface{}               `json:"queue,omitempty"`
 	Uuid          string                    `json:"uuid,omitempty"`
 	State         interface{}               `json:"state,omitempty"`
 	Firstdown     int                       `json:"firstdown,omitempty"`
