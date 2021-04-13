@@ -11,6 +11,7 @@ import (
 )
 
 func resourceCheck() *schema.Resource {
+
 	// prepare accepted values for validation
 	checkTypes := []string{
 		"AGENT", "AUDIO", "CLUSTER", "DOHDOT", "DNS", "FTP", "HTTP",
@@ -19,7 +20,7 @@ func resourceCheck() *schema.Resource {
 		"SPEC10RDDS", "SSH", "SSL", "WEBSOCKET", "WHOIS",
 	}
 	httpAdvMethods := []string{"GET", "POST", "PUT", "HEAD", "TRACE", "CONNECT"}
-	trueFalseStrings := []string{"fales", "true"}
+	trueFalseStrings := []string{"false", "true"}
 
 	return &schema.Resource{
 		CreateContext: resourceCheckCreate,
@@ -33,7 +34,7 @@ func resourceCheck() *schema.Resource {
 			"target":       &schema.Schema{Type: schema.TypeString, Optional: true},
 			"label":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"interval":     &schema.Schema{Type: schema.TypeInt, Optional: true},
-			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice(trueFalseStrings, false)},
+			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice([]string{"active", "inactive"}, false)},
 			"public":       &schema.Schema{Type: schema.TypeBool, Optional: true},
 			"runlocations": &schema.Schema{Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
 			// TODO: implement "homeloc" so that string "false" is translated into boolean false.
