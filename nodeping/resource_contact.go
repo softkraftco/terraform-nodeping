@@ -143,7 +143,25 @@ func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interfac
 	d.Set("custrole", contact.Custrole)
 
 	addresses := flattenAddresses(&contact.Addresses)
-	if err := d.Set("addresses", addresses); err != nil {
+
+	// sort addresses to match previous ordering
+	orderedAddresses := make([]interface{}, len(addresses))
+	for idx, a := range d.Get("addresses").([]interface{}) {
+		addrSchema := a.(map[string]interface{})
+		addressId := addrSchema["id"].(string)
+
+		for _, ad := range addresses {
+			address := ad.(map[string]interface{})
+			if addressId == address["id"].(string) ||
+				address["type"].(string) == addrSchema["type"].(string) &&
+					address["address"].(string) == addrSchema["address"].(string) {
+				orderedAddresses[idx] = address
+				break
+			}
+		}
+	}
+
+	if err := d.Set("addresses", orderedAddresses); err != nil {
 		return diag.FromErr(err)
 	}
 
