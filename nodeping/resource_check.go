@@ -46,6 +46,7 @@ func resourceCheck() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"contact":  &schema.Schema{Type: schema.TypeString, Required: true},
 						"delay":    &schema.Schema{Type: schema.TypeInt, Required: true},
 						"schedule": &schema.Schema{Type: schema.TypeString, Required: true},
 					},
@@ -162,19 +163,20 @@ func applyCheckToSchema(check *nodeping_api_client.Check, d *schema.ResourceData
 	return nil
 }
 
-func flattenNotifications(notifications *[]map[string]nodeping_api_client.Notification) []map[string]map[string]interface{} {
+func flattenNotifications(notifications *[]map[string]nodeping_api_client.Notification) []map[string]interface{} {
 	if notifications == nil { // return fast if nothing to do
-		return make([]map[string]map[string]interface{}, 0, 0)
+		return make([]map[string]interface{}, 0)
 	}
 
-	list := make([]map[string]map[string]interface{}, len(*notifications), len(*notifications))
+	list := make([]map[string]interface{}, len(*notifications))
 	for idx, notificationMap := range *notifications {
 		for notificationId, notification := range notificationMap {
 			flattened := make(map[string]interface{})
+			flattened["contact"] = notificationId
 			flattened["delay"] = notification.Delay
 			flattened["schedule"] = notification.Schedule
 
-			list[idx][notificationId] = flattened
+			list[idx] = flattened
 		}
 	}
 
@@ -216,17 +218,16 @@ func getCheckUpdateFromSchema(d *schema.ResourceData) *nodeping_api_client.Check
 	checkUpdate.Threshold = d.Get("threshold").(int)
 	checkUpdate.Sens = d.Get("sens").(int)
 
-	notifications := d.Get("notifications")
-	for _, nMp := range notifications.(*schema.Set).List() {
-		for contactKey, val := range nMp.(map[string]interface{}) {
-			nm := val.(map[string]interface{})
-			notificationMap := make(map[string]nodeping_api_client.Notification, 1)
-			notificationMap[contactKey] = nodeping_api_client.Notification{
-				nm["delay"].(int),
-				nm["schedule"].(string),
-			}
-			checkUpdate.Notifications = append(checkUpdate.Notifications, notificationMap)
+	notificationsSchemaList := d.Get("notifications").(*schema.Set).List()
+	checkUpdate.Notifications = make([]map[string]nodeping_api_client.Notification, len(notificationsSchemaList))
+	for idx, nS := range notificationsSchemaList {
+		notisicationSchema := nS.(map[string]interface{})
+		notificationMap := make(map[string]nodeping_api_client.Notification, 1)
+		notificationMap[notisicationSchema["contact"].(string)] = nodeping_api_client.Notification{
+			notisicationSchema["delay"].(int),
+			notisicationSchema["schedule"].(string),
 		}
+		checkUpdate.Notifications[idx] = notificationMap
 	}
 
 	checkUpdate.Dep = d.Get("dep").(string)
