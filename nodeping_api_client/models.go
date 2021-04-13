@@ -131,6 +131,16 @@ type Notification struct {
 	Schedule string `json:"schedule,omitempty"`
 }
 
+func (notification *Notification) UnmarshalJSON(data []byte) error {
+	var v map[string]interface{}
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	notification.Delay = int(v["delay"].(float64))
+	notification.Schedule = v["schedule"].(string)
+	return nil
+}
+
 type CheckField struct {
 	Name string `json:"name"`
 	Min  int    `json:"min"`
