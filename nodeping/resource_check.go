@@ -33,13 +33,13 @@ func resourceCheck() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(checkTypes, false)},
 			"target":       &schema.Schema{Type: schema.TypeString, Optional: true},
 			"label":        &schema.Schema{Type: schema.TypeString, Optional: true},
-			"interval":     &schema.Schema{Type: schema.TypeInt, Optional: true},
+			"interval":     &schema.Schema{Type: schema.TypeInt, Optional: true, Default: 15},
 			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice([]string{"active", "inactive"}, false)},
-			"public":       &schema.Schema{Type: schema.TypeBool, Optional: true},
+			"public":       &schema.Schema{Type: schema.TypeBool, Optional: true, Default: false},
 			"runlocations": &schema.Schema{Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
 			// TODO: implement "homeloc" so that string "false" is translated into boolean false.
 			"homeloc":   &schema.Schema{Type: schema.TypeString, Optional: true},
-			"threshold": &schema.Schema{Type: schema.TypeInt, Optional: true},
+			"threshold": &schema.Schema{Type: schema.TypeInt, Optional: true, Default: 5},
 			"sens":      &schema.Schema{Type: schema.TypeInt, Optional: true},
 			"notifications": &schema.Schema{
 				Type:     schema.TypeSet,
@@ -78,8 +78,7 @@ func resourceCheck() *schema.Resource {
 			"verify": &schema.Schema{Type: schema.TypeString, Optional: true,
 				ValidateFunc: validation.StringInSlice(trueFalseStrings, false)},
 			"ignore": &schema.Schema{Type: schema.TypeString, Optional: true},
-			"invert": &schema.Schema{Type: schema.TypeString, Optional: true,
-				ValidateFunc: validation.StringInSlice(trueFalseStrings, false)},
+			"invert": &schema.Schema{Type: schema.TypeBool, Optional: true, Default: false},
 			"warningdays": &schema.Schema{Type: schema.TypeInt, Optional: true,
 				ValidateFunc: validation.IntAtLeast(0)},
 			"fields": &schema.Schema{
@@ -103,7 +102,7 @@ func resourceCheck() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(httpAdvMethods, false)},
 			"statuscode": &schema.Schema{Type: schema.TypeInt, Optional: true,
 				ValidateFunc: validation.IntAtLeast(0)},
-			"ipv6":       &schema.Schema{Type: schema.TypeBool, Optional: true},
+			"ipv6":       &schema.Schema{Type: schema.TypeBool, Optional: true, Default: false},
 			"regex":      &schema.Schema{Type: schema.TypeBool, Optional: true},
 			"servername": &schema.Schema{Type: schema.TypeString, Optional: true},
 			"snmpv":      &schema.Schema{Type: schema.TypeString, Optional: true},
@@ -248,7 +247,7 @@ func getCheckUpdateFromSchema(d *schema.ResourceData) *nodeping_api_client.Check
 	checkUpdate.Secure = d.Get("secure").(string)
 	checkUpdate.Verify = d.Get("verify").(string)
 	checkUpdate.Ignore = d.Get("ignore").(string)
-	checkUpdate.Invert = d.Get("invert").(string)
+	checkUpdate.Invert = d.Get("invert").(bool)
 	checkUpdate.WarningDays = d.Get("warningdays").(int)
 
 	fields := d.Get("fields").(*schema.Set).List()
