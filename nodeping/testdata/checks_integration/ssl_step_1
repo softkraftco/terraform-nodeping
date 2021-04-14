@@ -1,0 +1,46 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.1"
+      source  = "softkraft.co/proj/nodeping"
+    }
+  }
+}
+
+resource "nodeping_contact" "first_contact"{
+	custrole = "owner"
+	name = "FirstContact"
+	addresses {
+		address = "first@o1.com"
+		type = "email"
+	}
+}
+
+
+resource "nodeping_check" "first_check"{
+	label = "SSLCheck"
+	type = "SSL"
+	target = "http://example.eu/"
+	enabled = "inactive"
+	notifications {
+		contact = nodeping_contact.first_contact.addresses[0].id
+		delay = 1
+		schedule = "Weekdays" 
+	}
+	// ssl specyfic attributes
+	warningdays = 10
+	servername = "http://example.eu/"
+}
+
+
+output "first_check_id" {
+	value = nodeping_check.first_check.id
+}
+
+output "first_contact_id" {
+	value = nodeping_contact.first_contact.id
+}
+
+output "first_address_id"{
+	value = nodeping_contact.first_contact.addresses[0].id
+}
