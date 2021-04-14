@@ -1,0 +1,50 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.1"
+      source  = "softkraft.co/proj/nodeping"
+    }
+  }
+}
+
+resource "nodeping_contact" "first_contact"{
+	custrole = "owner"
+	name = "FirstContact"
+	addresses {
+		address = "first@o1.com"
+		type = "email"
+	}
+}
+
+
+resource "nodeping_check" "first_check"{
+	label = "SSHCheck"
+	type = "SSH"
+	target = "100.120.0.1"
+	enabled = "inactive"
+	notifications {
+		contact = nodeping_contact.first_contact.addresses[0].id
+		delay = 1
+		schedule = "Weekdays" 
+	}
+	// ssh specyfic attributes
+	contentstring = "changed contentstring"
+	port = 900
+	username = "different username"
+	password = "another password"
+	verify = "false"
+	invert = false
+}
+
+
+output "first_check_id" {
+	value = nodeping_check.first_check.id
+}
+
+output "first_contact_id" {
+	value = nodeping_contact.first_contact.id
+}
+
+output "first_address_id"{
+	value = nodeping_contact.first_contact.addresses[0].id
+}
