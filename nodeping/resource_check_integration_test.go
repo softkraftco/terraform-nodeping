@@ -147,3 +147,64 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	// destroy
 	terraform.Destroy(t, terraformOptions)
 }
+
+func TestTerraformHTTPCheck(t *testing.T) {
+	/*
+		Checks if changes to HTTP specific attributes work properly.
+	*/
+	const terraformDir = "testdata/checks_integration"
+	const terraformMainFile = terraformDir + "/main.tf"
+
+	// create main.tf
+	copyFile(terraformDir+"/http_step_1", terraformMainFile)
+
+	// initialize terraform
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: terraformDir,
+		MaxRetries:   1,
+	})
+	terraform.Init(t, terraformOptions)
+
+	// prepare cleanup
+	defer cleanupTerraformDir(terraformDir)
+
+	// prepare API client
+	token := os.Getenv("NODEPING_API_TOKEN")
+	client := apiClient.NewClient(token)
+
+	// -----------------------------------
+	// create a single HTTP check
+	terraform.Apply(t, terraformOptions)
+	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, "HTTP", firstCheck.Type)
+	assert.Equal(t, true, firstCheck.Parameters["ipv6"])
+	assert.Equal(t, true, firstCheck.Parameters["follow"])
+	assert.Equal(t, "inactive", firstCheck.Enable)
+
+	// -----------------------------------
+	// change check ipv6 property
+	copyFile(terraformDir+"/http_step_2", terraformMainFile)
+	terraform.Apply(t, terraformOptions)
+
+	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, false, firstCheck.Parameters["ipv6"])
+	assert.Equal(t, false, firstCheck.Parameters["follow"])
+	// -----------------------------------
+	// destroy
+	terraform.Destroy(t, terraformOptions)
+}
+
