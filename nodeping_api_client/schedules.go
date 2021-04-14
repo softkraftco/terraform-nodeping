@@ -13,7 +13,7 @@ func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, 
 		Returns a schedule.
 	*/
 
-	body, err := client.doRequest2(ctx, "GET", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
+	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (client *Client) UpdateSchedule(ctx context.Context, schedule *Schedule) (s
 		return "", err
 	}
 
-	body, err := client.doRequest2(ctx, "PUT", fmt.Sprintf("%s/schedules/%s", client.HostURL, schedule.Name), requestBody)
+	body, err := client.doRequest(ctx, "PUT", fmt.Sprintf("%s/schedules/%s", client.HostURL, schedule.Name), requestBody)
 	if err != nil {
 		return "", err
 	}
@@ -69,6 +69,6 @@ func (client *Client) DeleteSchedule(ctx context.Context, Name string) error {
 	/*
 		Deletes an existing schedule.
 	*/
-	_, err := client.doRequest2(ctx, "DELETE", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
 	return err
 }
