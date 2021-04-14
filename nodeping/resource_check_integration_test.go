@@ -208,3 +208,71 @@ func TestTerraformHTTPCheck(t *testing.T) {
 	terraform.Destroy(t, terraformOptions)
 }
 
+func TestTerraformSSHCheck(t *testing.T) {
+	/*
+		Checks if changes to SSH specific attributes work properly.
+	*/
+	const terraformDir = "testdata/checks_integration"
+	const terraformMainFile = terraformDir + "/main.tf"
+
+	// create main.tf
+	copyFile(terraformDir+"/ssh_step_1", terraformMainFile)
+
+	// initialize terraform
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: terraformDir,
+		MaxRetries:   1,
+	})
+	terraform.Init(t, terraformOptions)
+
+	// prepare cleanup
+	defer cleanupTerraformDir(terraformDir)
+
+	// prepare API client
+	token := os.Getenv("NODEPING_API_TOKEN")
+	client := apiClient.NewClient(token)
+
+	// -----------------------------------
+	// create a single SSH check
+	terraform.Apply(t, terraformOptions)
+	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, "SSH", firstCheck.Type)
+	assert.Equal(t, "contentstring", firstCheck.Parameters["contentstring"])
+	assert.Equal(t, float64(1000), firstCheck.Parameters["port"])
+	assert.Equal(t, "username", firstCheck.Parameters["username"])
+	assert.Equal(t, "password", firstCheck.Parameters["password"])
+	assert.Equal(t, "true", firstCheck.Parameters["verify"])
+	assert.Equal(t, true, firstCheck.Parameters["invert"])
+	assert.Equal(t, "inactive", firstCheck.Enable)
+
+	// -----------------------------------
+	// change check "enabled" property
+	copyFile(terraformDir+"/ssh_step_2", terraformMainFile)
+	terraform.Apply(t, terraformOptions)
+
+	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, "changed contentstring", firstCheck.Parameters["contentstring"])
+	assert.Equal(t, float64(900), firstCheck.Parameters["port"])
+	assert.Equal(t, "different username", firstCheck.Parameters["username"])
+	assert.Equal(t, "another password", firstCheck.Parameters["password"])
+	assert.Equal(t, "false", firstCheck.Parameters["verify"])
+	assert.Equal(t, false, firstCheck.Parameters["invert"])
+	// -----------------------------------
+	// destroy
+	terraform.Destroy(t, terraformOptions)
+}
+
