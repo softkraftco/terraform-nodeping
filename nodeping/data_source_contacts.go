@@ -12,7 +12,7 @@ import (
 func dataSourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	contact, err := client.GetContact(d.Get("id").(string))
+	contact, err := client.GetContact(ctx, d.Get("id").(string))
 	if err != nil {
 		return diag.FromErr(err)
 	}

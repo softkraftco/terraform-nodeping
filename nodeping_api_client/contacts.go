@@ -1,10 +1,9 @@
 package nodeping_api_client
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"strings"
 )
 
 type ContactNotExists struct {
@@ -15,17 +14,12 @@ func (err *ContactNotExists) Error() string {
 	return fmt.Sprintf("Contact '%s' does not exist.", err.contactId)
 }
 
-func (client *Client) GetContact(Id string) (*Contact, error) {
+func (client *Client) GetContact(ctx context.Context, Id string) (*Contact, error) {
 	/*
 		Returns a single contact.
 	*/
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := client.doRequest(req)
+	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +38,7 @@ func (client *Client) GetContact(Id string) (*Contact, error) {
 	return &contact, nil
 }
 
-func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
+func (client *Client) CreateContact(ctx context.Context, contact *Contact) (*Contact, error) {
 	/*
 		Creates a new contact, along with all needed addresses
 	*/
@@ -53,15 +47,7 @@ func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST",
-		fmt.Sprintf("%s/contacts", client.HostURL),
-		strings.NewReader(string(rb)))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	body, err := client.doRequest(req)
+	body, err := client.doRequest(ctx, "POST", fmt.Sprintf("%s/contacts", client.HostURL), rb)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +61,7 @@ func (client *Client) CreateContact(contact *Contact) (*Contact, error) {
 	return &newContact, nil
 }
 
-func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
+func (client *Client) UpdateContact(ctx context.Context, contact *Contact) (*Contact, error) {
 	/*
 		Updates an existing contact.
 
@@ -91,15 +77,8 @@ func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
 
 	// although json already contains contact "_id", the API seems to require
 	// "id" this time, so it's easier to simply add id to url.
-	req, err := http.NewRequest("PUT",
-		fmt.Sprintf("%s/contacts/%s", client.HostURL, contact.ID),
-		strings.NewReader(string(rb)))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	body, err := client.doRequest(req)
+	body, err := client.doRequest(ctx, "PUT",
+		fmt.Sprintf("%s/contacts/%s", client.HostURL, contact.ID), rb)
 	if err != nil {
 		return nil, err
 	}
@@ -113,12 +92,10 @@ func (client *Client) UpdateContact(contact *Contact) (*Contact, error) {
 	return &newContact, nil
 }
 
-func (client *Client) DeleteContact(Id string) error {
+func (client *Client) DeleteContact(ctx context.Context, Id string) error {
 	/*
 		Deletes an existing contact
 	*/
-	req, err := http.NewRequest("DELETE",
-		fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
-	_, err = client.doRequest(req)
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
 	return err
 }
