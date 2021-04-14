@@ -70,7 +70,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	DnsToResolve   string                 `json:"dnstoresolve,omitempty"`
 	Dnsrd          bool                   `json:"dnsrd,omitempty"`
 	Transport      string                 `json:"transport,omitempty"`
-	Follow         bool                   `json:"follow,omitempty"`
+	Follow         bool                   `json:"follow"`
 	Email          string                 `json:"email,omitempty"`
 	Port           int                    `json:"port,omitempty"`
 	Username       string                 `json:"username,omitempty"`
@@ -78,7 +78,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	Secure         string                 `json:"secure,omitempty"`
 	Verify         string                 `json:"verify,omitempty"`
 	Ignore         string                 `json:"ignore,omitempty"`
-	Invert         string                 `json:"invert,omitempty"`
+	Invert         bool                   `json:"invert"`
 	WarningDays    int                    `json:"warningdays,omitempty"`
 	Fields         map[string]CheckField  `json:"fields,omitempty"`
 	Postdata       string                 `json:"postdata,omitempty"`
@@ -88,7 +88,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	Edns           map[string]interface{} `json:"edns,omitempty"`
 	Method         string                 `json:"method,omitempty"`
 	Statuscode     int                    `json:"statuscode,omitempty"`
-	Ipv6           bool                   `json:"ipv6,omitempty"`
+	Ipv6           bool                   `json:"ipv6"`
 	Regex          bool                   `json:"regex,omitempty"`
 	ServerName     string                 `json:"servername,omitempty"`
 	Snmpv          string                 `json:"snmpv,omitempty"`
