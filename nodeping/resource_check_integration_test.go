@@ -276,3 +276,65 @@ func TestTerraformSSHCheck(t *testing.T) {
 	terraform.Destroy(t, terraformOptions)
 }
 
+func TestTerraformSSLCheck(t *testing.T) {
+	/*
+		Checks if changes to SSL specific attributes work properly.
+	*/
+	const terraformDir = "testdata/checks_integration"
+	const terraformMainFile = terraformDir + "/main.tf"
+
+	// create main.tf
+	copyFile(terraformDir+"/ssl_step_1", terraformMainFile)
+
+	// initialize terraform
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: terraformDir,
+		MaxRetries:   1,
+	})
+	terraform.Init(t, terraformOptions)
+
+	// prepare cleanup
+	defer cleanupTerraformDir(terraformDir)
+
+	// prepare API client
+	token := os.Getenv("NODEPING_API_TOKEN")
+	client := apiClient.NewClient(token)
+
+	// -----------------------------------
+	// create a single SSL check
+	terraform.Apply(t, terraformOptions)
+	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, "SSL", firstCheck.Type)
+	assert.Equal(t, float64(10), firstCheck.Parameters["warningdays"])
+	assert.Equal(t, "http://example.eu/", firstCheck.Parameters["servername"])
+	assert.Equal(t, "inactive", firstCheck.Enable)
+
+	// -----------------------------------
+	// change check "enabled" property
+	copyFile(terraformDir+"/ssl_step_2", terraformMainFile)
+	terraform.Apply(t, terraformOptions)
+
+	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, firstCheckId, firstCheck.ID)
+	assert.Equal(t, "SSL", firstCheck.Type)
+	assert.Equal(t, "http://example.com/", firstCheck.Parameters["target"])
+	assert.Equal(t, float64(14), firstCheck.Parameters["warningdays"])
+	assert.Equal(t, "http://example.com/", firstCheck.Parameters["servername"])
+	assert.Equal(t, "inactive", firstCheck.Enable)
+	// -----------------------------------
+	// destroy
+	terraform.Destroy(t, terraformOptions)
+}
