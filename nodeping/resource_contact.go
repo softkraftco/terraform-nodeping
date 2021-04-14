@@ -120,7 +120,7 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 
 	contact := getContactFromSchema(d)
 
-	savedContact, err := client.CreateContact(contact)
+	savedContact, err := client.CreateContact(ctx, contact)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -132,7 +132,7 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	contact, err := client.GetContact(d.Id())
+	contact, err := client.GetContact(ctx, d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -173,7 +173,7 @@ func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interf
 
 	contact := getContactFromSchema(d)
 
-	_, err := client.UpdateContact(contact)
+	_, err := client.UpdateContact(ctx, contact)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -184,7 +184,7 @@ func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interf
 func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	err := client.DeleteContact(d.Id())
+	err := client.DeleteContact(ctx, d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}

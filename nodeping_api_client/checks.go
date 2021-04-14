@@ -12,8 +12,7 @@ func (client *Client) GetCheck(ctx context.Context, Id string) (*Check, error) {
 	/*
 		Returns a check.
 	*/
-
-	body, err := client.doRequest2(ctx, "GET", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
+	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +36,7 @@ func (client *Client) CreateCheck(ctx context.Context, checkUpdate *CheckUpdate)
 		return nil, err
 	}
 
-	body, err := client.doRequest2(ctx, "POST", fmt.Sprintf("%s/checks", client.HostURL), requestBody)
+	body, err := client.doRequest(ctx, "POST", fmt.Sprintf("%s/checks", client.HostURL), requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +48,6 @@ func (client *Client) CreateCheck(ctx context.Context, checkUpdate *CheckUpdate)
 	}
 
 	return &newCheck, nil
-
 }
 
 func (client *Client) UpdateCheck(ctx context.Context, check *CheckUpdate) (*Check, error) {
@@ -62,7 +60,7 @@ func (client *Client) UpdateCheck(ctx context.Context, check *CheckUpdate) (*Che
 		return nil, err
 	}
 
-	body, err := client.doRequest2(ctx, "PUT", fmt.Sprintf("%s/checks/%s", client.HostURL, check.ID), requestBody)
+	body, err := client.doRequest(ctx, "PUT", fmt.Sprintf("%s/checks/%s", client.HostURL, check.ID), requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +78,6 @@ func (client *Client) DeleteCheck(ctx context.Context, Id string) error {
 	/*
 		Deletes an existing check.
 	*/
-	_, err := client.doRequest2(ctx, "DELETE", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
 	return err
 }

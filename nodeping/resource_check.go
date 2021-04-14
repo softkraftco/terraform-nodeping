@@ -283,7 +283,6 @@ func getCheckUpdateFromSchema(d *schema.ResourceData) *nodeping_api_client.Check
 	checkUpdate.VolumeMin = d.Get("volumemin").(int)
 	checkUpdate.WhoisServer = d.Get("whoisserver").(string)
 
-
 	return &checkUpdate
 }
 
