@@ -31,6 +31,9 @@ resource "nodeping_check" "first_check"{
 		delay = 1
 		schedule = "Weekdays" 
 	}
+	// http specyfic fields
+	follow = true
+	ipv6 = true
 }
 
 
