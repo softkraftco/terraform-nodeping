@@ -3,7 +3,11 @@ NAMESPACE=proj
 NAME=nodeping
 BINARY=terraform-provider-${NAME}
 VERSION=0.1
-OS_ARCH=linux_amd64
+
+ifndef OS_ARCH
+	OS_ARCH=linux_amd64
+endif
+
 
 build:
 	go build -o ${BINARY}
