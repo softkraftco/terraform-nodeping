@@ -31,6 +31,7 @@ resource "nodeping_check" "first_check"{
 		delay = 1
 		schedule = "Weekdays" 
 	}
+	homeloc = "false"
 	// http specyfic fields
 	follow = false
 	ipv6 = false
