@@ -25,6 +25,7 @@ type Check struct {
 	Label         string                    `json:"label,omitempty"`
 	Type          string                    `json:"type,omitempty"`
 	CustomerId    string                    `json:"customer_id,omitempty"`
+	HomeLoc       interface{}               `json:"homeloc"`
 	Interval      int                       `json:"interval,omitempty"`
 	Status        string                    `json:"status,omitempty"`
 	Enable        string                    `json:"enable,omitempty"`
@@ -55,7 +56,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	Enable        string                    `json:"enabled,omitempty"` // Note this is called `enable` on GET responses
 	Public        bool                      `json:"public,omitempty"`
 	RunLocations  []string                  `json:"runlocations,omitempty"`
-	HomeLoc       string                    `json:"homeloc,omitempty"`
+	HomeLoc       interface{}               `json:"homeloc"`
 	Notifications []map[string]Notification `json:"notifications,omitempty"`
 	Threshold     int                       `json:"threshold,omitempty"`
 	Sens          int                       `json:"sens,omitempty"`
