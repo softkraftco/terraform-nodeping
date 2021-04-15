@@ -6,7 +6,13 @@ import (
 	"fmt"
 )
 
-// TODO: does not exist
+type ScheduleDoesNotExist struct {
+	scheduleName string
+}
+
+func (err *ScheduleDoesNotExist) Error() string {
+	return fmt.Sprintf("Schedule '%s' does not exist.", err.scheduleName)
+}
 
 func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, error) {
 	/*
@@ -16,6 +22,11 @@ func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, 
 	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
 	if err != nil {
 		return nil, err
+	}
+
+	if string(body) == "\"\"" {
+		e := ScheduleDoesNotExist{Name}
+		return nil, &e
 	}
 
 	schedule := Schedule{}
