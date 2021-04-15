@@ -68,10 +68,10 @@ It will be usefull, from a developers stand point, to also set `TF_LOG=DEBUG`. M
 
 This project includes a Makefile to ease standard every day tasks. Currently this includes three commands:
 - `make build` - builds the package,
-- `make install` - builds the package, and moves it to terraform plugins (this assumes `OS_ARCH=linux_amd64`, edit the Makefile if otherwise),
-- `make test` - re-installs the provider, and runs tests.
+- `make install` - builds the package, and moves it to terraform plugins,
+- `make run_tests` - installs the provider, and runs tests.
 
-TODO: OS_ARCH as environment variable.
+For `make install` (and by extension `make run_tests`) to work, an `OS_ARCH` environment variable should be set. If it's not present, then "linux_amd64" is assumed.
 
 Note that terraform keeps a checksum of providers in projects state, so after every plugin re-installation terraform state needs to be reset.
 
