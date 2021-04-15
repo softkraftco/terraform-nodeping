@@ -50,7 +50,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	assert.Equal(t, "FirstCheck", firstCheck.Label)
 	assert.Equal(t, "HTTP", firstCheck.Type)
 	assert.Equal(t, "inactive", firstCheck.Enable)
-	assert.Equal(t, "ca", firstCheck.Parameters["homeloc"])
+	assert.Equal(t, false, firstCheck.HomeLoc.(bool)) // Homeloc is available only with Provider plan
 
 	assert.Equal(t, 1, len(firstCheck.Notifications))
 	assert.Equal(t, 1, len(firstCheck.Notifications[0]))
@@ -74,7 +74,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	assert.Equal(t, "FirstCheck", firstCheck.Label)
 	assert.Equal(t, "HTTP", firstCheck.Type)
 	assert.Equal(t, "active", firstCheck.Enable)
-	assert.Equal(t, nil, firstCheck.Parameters["homeloc"])
+	assert.Equal(t, false, firstCheck.HomeLoc)
 
 	assert.Equal(t, 1, len(firstCheck.Notifications))
 	assert.Equal(t, 1, len(firstCheck.Notifications[0]))
