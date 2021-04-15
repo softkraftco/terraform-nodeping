@@ -2,6 +2,7 @@ package nodeping
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -178,10 +179,10 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	firstContact, err = client.GetContact(ctx, firstContractId)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
-		case *apiClient.ContactNotExists:
+		case *apiClient.ContactDoesNotExist:
 			// this is correct
 		default:
-			log.Fatal(e)
+			assert.Fail(t, fmt.Sprintf("Call to GetContact raised an unexpected error: %s", e))
 		}
 	}
 
@@ -203,10 +204,10 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	secondContract, err = client.GetContact(ctx, secondContractId)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
-		case *apiClient.ContactNotExists:
+		case *apiClient.ContactDoesNotExist:
 			// this is correct
 		default:
-			log.Fatal(e)
+			assert.Fail(t, fmt.Sprintf("Call to GetContact raised an unexpected error: %s", e))
 		}
 	}
 }
