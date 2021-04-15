@@ -6,8 +6,6 @@ import (
 	"fmt"
 )
 
-// TODO: does not exist
-
 func (client *Client) GetCheck(ctx context.Context, Id string) (*Check, error) {
 	/*
 		Returns a check.

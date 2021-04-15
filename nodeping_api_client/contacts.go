@@ -6,11 +6,11 @@ import (
 	"fmt"
 )
 
-type ContactNotExists struct {
+type ContactDoesNotExist struct {
 	contactId string
 }
 
-func (err *ContactNotExists) Error() string {
+func (err *ContactDoesNotExist) Error() string {
 	return fmt.Sprintf("Contact '%s' does not exist.", err.contactId)
 }
 
@@ -25,7 +25,7 @@ func (client *Client) GetContact(ctx context.Context, Id string) (*Contact, erro
 	}
 
 	if string(body) == "{}" {
-		e := ContactNotExists{Id}
+		e := ContactDoesNotExist{Id}
 		return nil, &e
 	}
 
