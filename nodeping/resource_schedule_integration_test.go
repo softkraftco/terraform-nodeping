@@ -2,6 +2,7 @@ package nodeping
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -13,8 +14,7 @@ import (
 	apiClient "terraform-nodeping/nodeping_api_client"
 )
 
-//func TestTerraformScheduleLifeCycle(t *testing.T) {
-func TestTsSLC(t *testing.T) {
+func TestTerraformScheduleLifeCycle(t *testing.T) {
 	const terraformDir = "testdata/schedules_integration"
 	const terraformMainFile = terraformDir + "/main.tf"
 
@@ -131,4 +131,13 @@ func TestTsSLC(t *testing.T) {
 	// -----------------------------------
 	// destroy
 	terraform.Destroy(t, terraformOptions)
+	schedule, err = client.GetSchedule(ctx, scheduleName)
+	if assert.Error(t, err) {
+		switch e := err.(type) {
+		case *apiClient.ScheduleDoesNotExist:
+			// this is correct
+		default:
+			assert.Fail(t, fmt.Sprintf("Call to GetSchedule raised an unexpected error. %s", e))
+		}
+	}
 }
