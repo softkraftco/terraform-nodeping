@@ -37,10 +37,9 @@ func resourceCheck() *schema.Resource {
 			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice([]string{"active", "inactive"}, false)},
 			"public":       &schema.Schema{Type: schema.TypeBool, Optional: true, Default: false},
 			"runlocations": &schema.Schema{Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
-			// TODO: implement "homeloc" so that string "false" is translated into boolean false.
-			"homeloc":   &schema.Schema{Type: schema.TypeString, Optional: true},
-			"threshold": &schema.Schema{Type: schema.TypeInt, Optional: true, Default: 5},
-			"sens":      &schema.Schema{Type: schema.TypeInt, Optional: true},
+			"homeloc":      &schema.Schema{Type: schema.TypeString, Optional: true},
+			"threshold":    &schema.Schema{Type: schema.TypeInt, Optional: true, Default: 5},
+			"sens":         &schema.Schema{Type: schema.TypeInt, Optional: true},
 			"notifications": &schema.Schema{
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -143,6 +142,14 @@ func applyCheckToSchema(check *nodeping_api_client.Check, d *schema.ResourceData
 	if err != nil {
 		return err
 	}
+	if check.HomeLoc == false {
+		err = d.Set("homeloc", "false")
+	} else {
+		err = d.Set("homeloc", check.HomeLoc)
+	}
+	if err != nil {
+		return err
+	}
 	err = d.Set("notifications", flattenNotifications(&check.Notifications))
 	if err != nil {
 		return err
@@ -213,7 +220,11 @@ func getCheckUpdateFromSchema(d *schema.ResourceData) *nodeping_api_client.Check
 	for _, runLocation := range d.Get("runlocations").(*schema.Set).List() {
 		checkUpdate.RunLocations = append(checkUpdate.RunLocations, runLocation.(string))
 	}
-	checkUpdate.HomeLoc = d.Get("homeloc").(string)
+	if d.Get("homeloc").(string) == "false" {
+		checkUpdate.HomeLoc = false
+	} else {
+		checkUpdate.HomeLoc = d.Get("homeloc").(string)
+	}
 	checkUpdate.Threshold = d.Get("threshold").(int)
 	checkUpdate.Sens = d.Get("sens").(int)
 
