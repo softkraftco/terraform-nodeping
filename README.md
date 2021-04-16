@@ -7,12 +7,7 @@ This is NodePing provider for Terraform. It can be used to manage
 
 ### Setup
 
-To authenticate to NodePing API, one needs to use API token. To pass this token to provider plugin, set an environmental variable.
-```
-export NODEPING_API_TOKEN=00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA
-```
-
-Then add NodePing to `required_providers` in your terraform files.
+Add NodePing to `required_providers` in your terraform files.
 
 ```
 terraform {
@@ -24,6 +19,20 @@ terraform {
   }
 }
 ```
+
+To authenticate to NodePing API, one needs to use API token. To pass this token to provider plugin, set an environmental variable.
+```
+export NODEPING_API_TOKEN=00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA
+```
+
+or define it in a `provider` block in your terraform file.
+
+```
+provider "nodeping" {
+  token = "00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA"
+}
+```
+
 
 ### Resources
 
@@ -62,9 +71,7 @@ output "contact" {
 
 ## Development
 
-Just like in case of normal use, `NODEPING_API_TOKEN` environmental variable needs to be set.
-
-It will be usefull, from a developers stand point, to also set `TF_LOG=DEBUG`. More info (here)[https://www.terraform.io/docs/internals/debugging.html].
+It will be usefull, from a developers stand point, to set `TF_LOG=DEBUG`. More info (here)[https://www.terraform.io/docs/internals/debugging.html].
 
 This project includes a Makefile to ease standard every day tasks. Currently this includes three commands:
 - `make build` - builds the package,
@@ -72,6 +79,8 @@ This project includes a Makefile to ease standard every day tasks. Currently thi
 - `make run_tests` - installs the provider, and runs tests.
 
 For `make install` (and by extension `make run_tests`) to work, an `OS_ARCH` environment variable should be set. If it's not present, then "linux_amd64" is assumed.
+
+The `make run_tests` command requires `NODEPING_API_TOKEN` environmental variable needs to be set, even if it is declared in terraform files. This is because tests query nodeping API to check that expected resources were created. 
 
 Note that terraform keeps a checksum of providers in projects state, so after every plugin re-installation terraform state needs to be reset.
 
