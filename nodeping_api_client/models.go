@@ -25,11 +25,12 @@ type Check struct {
 	Label         string                    `json:"label,omitempty"`
 	Type          string                    `json:"type,omitempty"`
 	CustomerId    string                    `json:"customer_id,omitempty"`
+	Description   string                    `json:"description,omitempty"`
 	HomeLoc       interface{}               `json:"homeloc"`
 	Interval      int                       `json:"interval,omitempty"`
 	Status        string                    `json:"status,omitempty"`
 	Enable        string                    `json:"enable,omitempty"`
-	Public        bool                      `json:"public,omitempty"`
+	Public        bool                      `json:"public"`
 	Notifications []map[string]Notification `json:"notifications,omitempty"`
 	Parameters    map[string]interface{}    `json:"parameters,omitempty"`
 	Runlocations  []string                  `json:"runlocations,omitempty"`
@@ -54,7 +55,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	Target        string                    `json:"target,omitempty"`
 	Interval      int                       `json:"interval,omitempty"`
 	Enable        string                    `json:"enabled,omitempty"` // Note this is called `enable` on GET responses
-	Public        bool                      `json:"public,omitempty"`
+	Public        string                    `json:"public,omitempty"`
 	RunLocations  []string                  `json:"runlocations,omitempty"`
 	HomeLoc       interface{}               `json:"homeloc"`
 	Notifications []map[string]Notification `json:"notifications,omitempty"`
