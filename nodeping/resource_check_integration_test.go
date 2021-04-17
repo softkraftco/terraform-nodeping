@@ -51,13 +51,22 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	assert.Equal(t, "HTTP", firstCheck.Type)
 	assert.Equal(t, "inactive", firstCheck.Enable)
 	assert.Equal(t, false, firstCheck.HomeLoc.(bool)) // Homeloc is available only with Provider plan
+	assert.Equal(t, 25, firstCheck.Interval)
+	assert.Equal(t, true, firstCheck.Public)
+
+	assert.Contains(t, firstCheck.Runlocations, "eur")
+	assert.Contains(t, firstCheck.Runlocations, "nam")
+	assert.Equal(t, 2, len(firstCheck.Runlocations))
+	assert.Equal(t, float64(3), firstCheck.Parameters["threshold"])
+	assert.Equal(t, float64(1), firstCheck.Parameters["sens"])
+	assert.Equal(t, "Testing 123", firstCheck.Description)
 
 	assert.Equal(t, 1, len(firstCheck.Notifications))
 	assert.Equal(t, 1, len(firstCheck.Notifications[0]))
 	assert.Equal(t, 1, firstCheck.Notifications[0][firstAddressId].Delay)
 	assert.Equal(t, "Weekdays", firstCheck.Notifications[0][firstAddressId].Schedule)
 	// -----------------------------------
-	// change check "enabled" property
+	// change check properties
 	copyFile(terraformDir+"/http_step_2", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
 	firstAddressId = terraform.Output(t, terraformOptions, "first_address_id")
@@ -75,6 +84,12 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	assert.Equal(t, "HTTP", firstCheck.Type)
 	assert.Equal(t, "active", firstCheck.Enable)
 	assert.Equal(t, false, firstCheck.HomeLoc)
+	assert.Equal(t, 30, firstCheck.Interval)
+	assert.Equal(t, false, firstCheck.Public)
+	assert.Equal(t, []string{"eur"}, firstCheck.Runlocations)
+	assert.Equal(t, float64(4), firstCheck.Parameters["threshold"])
+	assert.Equal(t, float64(5), firstCheck.Parameters["sens"])
+	assert.Equal(t, "Testing 12345", firstCheck.Description)
 
 	assert.Equal(t, 1, len(firstCheck.Notifications))
 	assert.Equal(t, 1, len(firstCheck.Notifications[0]))

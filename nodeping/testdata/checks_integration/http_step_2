@@ -26,6 +26,12 @@ resource "nodeping_check" "first_check"{
 	type = "HTTP"
 	target = "http://cosiek.eu/"
 	enabled = "active"
+	interval = 30
+	public = false
+	runlocations = ["eur"]
+	threshold = 4
+	sens = 5
+	description = "Testing 12345"
 	notifications {
 		contact = nodeping_contact.first_contact.addresses[0].id
 		delay = 1
