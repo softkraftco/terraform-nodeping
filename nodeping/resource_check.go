@@ -159,6 +159,11 @@ func applyCheckToSchema(check *nodeping_api_client.Check, d *schema.ResourceData
 		return err
 	}
 
+	err = d.Set("description", check.Description)
+	if err != nil {
+		return err
+	}
+
 	for key, val := range check.Parameters {
 		err = d.Set(key, val)
 		if err != nil {
@@ -216,7 +221,13 @@ func getCheckUpdateFromSchema(d *schema.ResourceData) *nodeping_api_client.Check
 	checkUpdate.Label = d.Get("label").(string)
 	checkUpdate.Interval = d.Get("interval").(int)
 	checkUpdate.Enable = d.Get("enabled").(string)
-	checkUpdate.Public = d.Get("public").(bool)
+	// this silly conversion is here because API expects public to be a string,
+	// but returns a bool
+	if d.Get("public").(bool) {
+		checkUpdate.Public = "true"
+	} else {
+		checkUpdate.Public = "false"
+	}
 	for _, runLocation := range d.Get("runlocations").(*schema.Set).List() {
 		checkUpdate.RunLocations = append(checkUpdate.RunLocations, runLocation.(string))
 	}
