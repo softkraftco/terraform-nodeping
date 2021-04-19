@@ -1,5 +1,8 @@
+# Build output
+out/
+
+# Terraform tests
 .terraform/
 terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
-

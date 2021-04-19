@@ -1,7 +1,7 @@
 HOSTNAME=softkraft.co
 NAMESPACE=terraform
 NAME=nodeping
-BINARY=terraform-provider-${NAME}
+BINARY=out/terraform-provider-${NAME}
 VERSION=0.0.1
 
 ifndef OS_ARCH
