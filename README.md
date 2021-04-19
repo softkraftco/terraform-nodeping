@@ -1,6 +1,6 @@
 # Terraform Nodeping Provider
 
-This is NodePing provider for Terraform. It can be used to manage 
+This is [NodePing](https://nodeping.com) provider for Terraform. It can be used to manage 
 [NodePing resources](https://nodeping.com/docs-api-overview.html) like Checks or Contacts.
 
 ## Use
