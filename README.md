@@ -3,7 +3,7 @@
 This is [NodePing](https://nodeping.com) provider for Terraform. It can be used to manage 
 [NodePing resources](https://nodeping.com/docs-api-overview.html) like Checks or Contacts.
 
-# Quick start
+## Quick start
 
 First of all, build and install the provider into your local Terraform installation:
 
