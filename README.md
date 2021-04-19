@@ -1,24 +1,62 @@
-# Terraform Nodeping Provider
+# Terraform NodePing Provider
 
 This is [NodePing](https://nodeping.com) provider for Terraform. It can be used to manage 
 [NodePing resources](https://nodeping.com/docs-api-overview.html) like Checks or Contacts.
 
-## Use
+# Quick start
 
-### Setup
+First of all, build and install the provider into your local Terraform installation:
 
-Add NodePing to `required_providers` in your terraform files.
-
+```bash
+git clone https://github.com/softkraftco/terraform-nodeping.git
+cd terraform-nodeping
+make install
 ```
+
+Next create new Terraform project:
+
+```bash
+mkdir mynodeping
+cd mynodeping
+touch mynodeping.tf 
+```
+
+As a next step add NodePing provider to `required_providers` section of `mynodeping.tf ` file:
+
+```hcl
 terraform {
   required_providers {
     nodeping = {
       version = "0.0.1"
       source  = "softkraft.co/terraform/nodeping"
     }
-  }
+  }  
+}
+
+provider "nodeping" {
+    token = "00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA"
 }
 ```
+
+Then add NodePing check resource definition to `mynodeping.tf ` file:
+
+```hcl
+resource "nodeping_check" "mycheck"{
+	label = "mycheck"
+	type = "HTTP"
+	target = "http://example.eu/"
+	enabled = "inactive"
+}
+```
+
+And finally execute Terraform!
+
+```bash
+terraform apply
+```
+
+
+## Usage
 
 To authenticate to NodePing API, one needs to use API token. It can be passed to provider plugin in two ways: 
 set an environment variable:
@@ -33,7 +71,6 @@ provider "nodeping" {
   token = "00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA"
 }
 ```
-
 
 ### Resources
 
