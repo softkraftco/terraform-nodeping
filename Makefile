@@ -10,13 +10,17 @@ endif
 
 all: vendor build
 
+fmt:
+	go fmt main.go
+	go fmt nodeping/*.go
+
 vendoring:
 	go mod vendor
 
 build:
 	go build -o ${BINARY}
 
-install: vendoring build
+install: fmt vendoring build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
