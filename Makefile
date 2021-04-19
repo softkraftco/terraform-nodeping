@@ -10,13 +10,13 @@ endif
 
 all: vendor build
 
-vendor:
+vendoring:
 	go mod vendor
 
 build:
 	go build -o ${BINARY}
 
-install: vendor build
+install: vendoring build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
