@@ -17,7 +17,7 @@ func Provider() *schema.Provider {
 				Required:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("NODEPING_API_TOKEN", nil),
-				Description: "NodePing API token. used for authentication.",
+				Description: "NodePing API token - used for an authentication against NodePing API.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
