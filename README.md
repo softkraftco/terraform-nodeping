@@ -13,8 +13,8 @@ Add NodePing to `required_providers` in your terraform files.
 terraform {
   required_providers {
     nodeping = {
-      version = "0.1"
-      source  = "softkraft.co/proj/nodeping"
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
     }
   }
 }
@@ -118,8 +118,8 @@ This example shows how to use all these resources together.
 terraform {
   required_providers {
     nodeping = {
-      version = "0.1"
-      source  = "softkraft.co/proj/nodeping"
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
     }
   }
 }
