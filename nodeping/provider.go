@@ -9,10 +9,12 @@ import (
 	"terraform-nodeping/nodeping_api_client"
 )
 
+const configToken = "token"
+
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"token": &schema.Schema{
+			configToken: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Sensitive:   true,
@@ -33,6 +35,6 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	client := nodeping_api_client.NewClient(d.Get("token").(string))
+	client := nodeping_api_client.NewClient(d.Get(configToken).(string))
 	return client, nil
 }
