@@ -54,21 +54,20 @@ And finally execute Terraform!
 terraform apply
 ```
 
-
 ## Usage
 
-To authenticate to NodePing API, one needs to use API token. It can be passed to provider plugin in two ways: 
-set an environment variable:
-```
-export NODEPING_API_TOKEN=00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA
-```
-
-or define it in a `provider` block in your terraform file:
+To authenticate to NodePing API, one needs to use API token. It can be passed to provider plugin in two ways. The preferred approach is to define a token in a `provider` block in your Terraform file:
 
 ```
 provider "nodeping" {
   token = "00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA"
 }
+```
+
+As alternative you can specify token using an environment variable:
+```
+export NODEPING_API_TOKEN=00AAAAAA-A0A0-AAAA-0000-A0AA0A000AAA
+terraform apply
 ```
 
 ### Resources
