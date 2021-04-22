@@ -13,6 +13,7 @@ all: vendor build
 fmt:
 	go fmt main.go
 	go fmt nodeping/*.go
+	go fmt nodeping_api_client/*.go
 
 vendoring:
 	go mod vendor
