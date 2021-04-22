@@ -72,10 +72,16 @@ terraform apply
 
 ### Resources
 
-#### Checks
+This provider supports the following type of resources:
+- Check
+- Contact
+- Schedule 
+
+#### Check
 
 This is an simple example declaration of `check` resource:
-```
+
+```hcl
 resource "nodeping_check" "some_check"{
 	label = "SomeCheck"
 	type = "HTTP"
@@ -84,16 +90,12 @@ resource "nodeping_check" "some_check"{
 }
 ```
 
-As of now, only HTTP, SSH, and SSL checks were tested, but parameters used by other check types are implemented and should work, although without any guaranties.
-
-The implementation generally follows [API documentation](https://nodeping.com/docs-api-checks.html), with some differencess:
- - `enabled` parameter accepts only strings: "active", "inactive"
- - `homeloc` will only accept strings, if you need to run the check on a random probe, set this tarameter to `"false"` (string).
+The implementation generally follows [API documentation](https://nodeping.com/docs-api-checks.html), with some differences:
+ - `enabled` parameter accepts only strings: `active`, `inactive`
+ - `homeloc` will only accept strings, if you need to run the check on a random probe, set this parameter to `"false"` (string).
  - `public` is a bool, not a string.
 
-Remember that by default nodeping creates checks as inactive.
-
-#### Contacts
+#### Contact
 
 This is an example declaration of `contact` resource:
 ```
@@ -117,9 +119,9 @@ The provider closely follows [NodePing API](https://nodeping.com/docs-api-contac
 
 One difference to the original API is that this terraform provider is aware of the order in with addresses are declared. This is due to the use of address id when connecting checks and addresses. See more robust example below.
 
-#### Schedules
+#### Schedule
 
-This is an ecample declaration of a `schedule` resource:
+This is an example declaration of a `schedule` resource:
 
 ```
 resource "nodeping_schedule" "my_schedule"{
@@ -224,7 +226,7 @@ output "my_schedule_name" {
 }
 ```
 
-### Data sourcesss
+### Data sources
 
 Currently the only implemented data source is contact. Here's an example use:
 
