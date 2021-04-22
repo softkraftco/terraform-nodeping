@@ -34,7 +34,7 @@ func resourceCheck() *schema.Resource {
 			"target":       &schema.Schema{Type: schema.TypeString, Optional: true},
 			"label":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"interval":     &schema.Schema{Type: schema.TypeInt, Optional: true, Default: 15},
-			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice([]string{"active", "inactive"}, false)},
+			"enabled":      &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice([]string{"active", "inactive"}, false), Default: "active"},
 			"public":       &schema.Schema{Type: schema.TypeBool, Optional: true, Default: false},
 			"runlocations": &schema.Schema{Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
 			"homeloc":      &schema.Schema{Type: schema.TypeString, Optional: true},

@@ -45,7 +45,6 @@ resource "nodeping_check" "mycheck"{
 	label = "mycheck"
 	type = "HTTP"
 	target = "http://example.eu/"
-	enabled = "inactive"
 }
 ```
 
