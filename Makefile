@@ -8,7 +8,7 @@ ifndef OS_ARCH
 	OS_ARCH=linux_amd64
 endif
 
-all: vendor build
+all: vendoring fmt build
 
 fmt:
 	go fmt main.go
