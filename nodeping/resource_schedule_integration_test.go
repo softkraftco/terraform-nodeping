@@ -1,4 +1,4 @@
-package nodeping
+package nodeping_test
 
 import (
 	"context"
