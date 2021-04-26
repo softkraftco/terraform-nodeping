@@ -256,3 +256,7 @@ The `make run_tests` command requires `NODEPING_API_TOKEN` environmental variabl
 Terraform keeps a checksum of providers in projects state, so after every plugin re-installation terraform state needs to be reset (removing .terraform, .terraform.lock.hcl, terraform.tfstate).
 
 At this point, the only tests in the project are integration tests. Note that if a tests fails with an error, you may be left with some resources created at NodePing. In that case there might also be a need to restart terraform state.
+
+## License
+ 
+This project is distributed under [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
