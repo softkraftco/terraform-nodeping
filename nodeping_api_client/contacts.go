@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 type ContactDoesNotExist struct {
@@ -19,7 +20,7 @@ func (client *Client) GetContact(ctx context.Context, Id string) (*Contact, erro
 		Returns a single contact.
 	*/
 
-	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (client *Client) CreateContact(ctx context.Context, contact *Contact) (*Con
 		return nil, err
 	}
 
-	body, err := client.doRequest(ctx, "POST", fmt.Sprintf("%s/contacts", client.HostURL), rb)
+	body, err := client.doRequest(ctx, http.MethodPost, fmt.Sprintf("%s/contacts", client.HostURL), rb)
 	if err != nil {
 		return nil, err
 	}

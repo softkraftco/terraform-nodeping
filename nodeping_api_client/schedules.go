@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 type ScheduleDoesNotExist struct {
@@ -19,7 +20,7 @@ func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, 
 		Returns a schedule.
 	*/
 
-	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
 	if err != nil {
 		return nil, err
 	}

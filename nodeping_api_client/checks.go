@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 func (client *Client) GetCheck(ctx context.Context, Id string) (*Check, error) {
 	/*
 		Returns a check.
 	*/
-	body, err := client.doRequest(ctx, "GET", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +35,7 @@ func (client *Client) CreateCheck(ctx context.Context, checkUpdate *CheckUpdate)
 		return nil, err
 	}
 
-	body, err := client.doRequest(ctx, "POST", fmt.Sprintf("%s/checks", client.HostURL), requestBody)
+	body, err := client.doRequest(ctx, http.MethodPost, fmt.Sprintf("%s/checks", client.HostURL), requestBody)
 	if err != nil {
 		return nil, err
 	}
