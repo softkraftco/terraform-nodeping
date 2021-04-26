@@ -21,7 +21,7 @@ vendoring:
 build:
 	go build -o ${BINARY}
 
-install: fmt vendoring build
+install: vendoring fmt build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
