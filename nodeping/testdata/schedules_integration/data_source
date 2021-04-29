@@ -1,0 +1,21 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }
+}
+
+
+data "nodeping_schedule" "the_schedule" {
+	name = "Weekdays"
+}
+
+output "schedule_name" {
+	value = data.nodeping_schedule.the_schedule.name
+}
+
+output "schedule" {
+	value = data.nodeping_schedule.the_schedule
+}
