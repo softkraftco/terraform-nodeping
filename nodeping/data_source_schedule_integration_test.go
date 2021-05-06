@@ -1,4 +1,4 @@
-package nodeping
+package nodeping_test
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 )
 
 func TestScheduleDataSource(t *testing.T) {
-	const terraformDir = "testdata/schedules_integration"
+	const terraformDir = "testdata/schedules_integration/data_source"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf

@@ -361,7 +361,9 @@ This project includes a Makefile to ease standard every day tasks. Currently thi
 
 For `make install` (and by extension `make run_tests`) to work, an `OS_ARCH` environment variable should be set. If it's not present, then "linux_amd64" is assumed.
 
-The `make run_tests` command requires `NODEPING_API_TOKEN` environmental variable needs to be set, even if it is declared in terraform files. This is because tests query nodeping API to check that expected resources were created. 
+The `make run_tests` command requires `NODEPING_API_TOKEN` environmental variable needs to be set, even if it is declared in terraform files. This is because tests query nodeping API to check that expected resources were created.
+
+Also `make run_tests` runs tests in paralel, with might make the output unredable. If you want to run tests one by one, simply set `-parallel 1` in `run_tests` code in Makefile.
 
 Terraform keeps a checksum of providers in projects state, so after every plugin re-installation terraform state needs to be reset (removing .terraform, .terraform.lock.hcl, terraform.tfstate).
 

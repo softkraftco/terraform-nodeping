@@ -15,7 +15,9 @@ import (
 )
 
 func TestTerraformScheduleLifeCycle(t *testing.T) {
-	const terraformDir = "testdata/schedules_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/schedules_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf

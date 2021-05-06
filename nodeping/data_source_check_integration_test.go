@@ -1,4 +1,4 @@
-package nodeping
+package nodeping_test
 
 import (
 	"context"
@@ -14,6 +14,8 @@ import (
 )
 
 func TestCheckDataSource(t *testing.T) {
+	t.Parallel()
+
 	// prepare API client
 	token := os.Getenv("NODEPING_API_TOKEN")
 	client := apiClient.NewClient(token)
@@ -43,13 +45,10 @@ func TestCheckDataSource(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	println("******")
-	println(check.Notifications)
-	println("******")
 	// prepare cleanup
 	defer client.DeleteCheck(ctx, check.ID)
 
-	const terraformDir = "testdata/checks_integration"
+	const terraformDir = "testdata/checks_integration/data_source"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf

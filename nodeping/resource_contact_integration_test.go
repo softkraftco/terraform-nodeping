@@ -15,7 +15,9 @@ import (
 )
 
 func TestTerraformContactLifeCycle(t *testing.T) {
-	const terraformDir = "testdata/contacts_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/contacts_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf

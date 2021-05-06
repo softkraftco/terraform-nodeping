@@ -1,4 +1,4 @@
-package nodeping
+package nodeping_test
 
 import (
 	"context"
@@ -15,7 +15,9 @@ import (
 )
 
 func TestContactDataSource(t *testing.T) {
-	const terraformDir = "testdata/contacts_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/contacts_integration/data_source"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// prepare API client

@@ -14,7 +14,9 @@ import (
 )
 
 func TestTerraformCheckLifeCycle(t *testing.T) {
-	const terraformDir = "testdata/checks_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/checks_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
@@ -173,7 +175,9 @@ func TestTerraformHTTPCheck(t *testing.T) {
 	/*
 		Checks if changes to HTTP specific attributes work properly.
 	*/
-	const terraformDir = "testdata/checks_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/checks_integration/http"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
@@ -233,7 +237,9 @@ func TestTerraformSSHCheck(t *testing.T) {
 	/*
 		Checks if changes to SSH specific attributes work properly.
 	*/
-	const terraformDir = "testdata/checks_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/checks_integration/ssh"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
@@ -301,7 +307,9 @@ func TestTerraformSSLCheck(t *testing.T) {
 	/*
 		Checks if changes to SSL specific attributes work properly.
 	*/
-	const terraformDir = "testdata/checks_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/checks_integration/ssl"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
