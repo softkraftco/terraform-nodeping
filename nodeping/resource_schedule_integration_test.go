@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -35,8 +34,7 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// prepare context for client
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

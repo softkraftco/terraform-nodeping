@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -21,8 +20,7 @@ func TestContactDataSource(t *testing.T) {
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// create a contact to read
 	address := apiClient.Address{

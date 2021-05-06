@@ -3,7 +3,6 @@ package nodeping_test
 import (
 	"context"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -17,8 +16,7 @@ func TestCheckDataSource(t *testing.T) {
 	t.Parallel()
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// prepare a single HTTP check
 	notifications := make([]map[string]apiClient.Notification, 1)

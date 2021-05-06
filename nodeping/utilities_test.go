@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+
+	apiClient "terraform-nodeping/nodeping_api_client"
 )
 
 func copyFile(src, dst string) {
@@ -31,4 +33,9 @@ func cleanupTerraformDir(terraformDir string) {
 			log.Fatal(err)
 		}
 	}
+}
+
+func getClient() *apiClient.Client {
+	token := os.Getenv("NODEPING_API_TOKEN")
+	return apiClient.NewClient(token)
 }

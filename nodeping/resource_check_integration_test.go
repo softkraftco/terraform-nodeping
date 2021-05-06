@@ -3,14 +3,11 @@ package nodeping_test
 import (
 	"context"
 	"log"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
-
-	apiClient "terraform-nodeping/nodeping_api_client"
 )
 
 func TestTerraformCheckLifeCycle(t *testing.T) {
@@ -33,8 +30,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single HTTP check
@@ -194,8 +190,7 @@ func TestTerraformHTTPCheck(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single HTTP check
@@ -256,8 +251,7 @@ func TestTerraformSSHCheck(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single SSH check
@@ -326,8 +320,7 @@ func TestTerraformSSLCheck(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single SSL check

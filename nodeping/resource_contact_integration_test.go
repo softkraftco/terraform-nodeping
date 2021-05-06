@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -33,8 +32,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single contact
