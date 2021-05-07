@@ -26,4 +26,4 @@ install: vendoring fmt build
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 run_tests: install
-	go test -v -count=1 -parallel 4 -timeout 30m ./nodeping
+	go test -v -count=1 -timeout 30m ./nodeping
