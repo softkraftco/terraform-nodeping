@@ -28,7 +28,9 @@ func Provider() *schema.Provider {
 			"nodeping_schedule": resourceSchedule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"nodeping_contact": dataSourceContact(),
+			"nodeping_check":    dataSourceCheck(),
+			"nodeping_contact":  dataSourceContact(),
+			"nodeping_schedule": dataSourceSchedule(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

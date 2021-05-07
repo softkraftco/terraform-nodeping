@@ -1,0 +1,45 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }
+}
+
+variable "check_id"{
+	type = string
+}
+
+data "nodeping_check" "the_check" {
+	id = var.check_id
+}
+
+
+output "check_id" {
+	value = data.nodeping_check.the_check.id
+}
+
+output "check_type" {
+	value = data.nodeping_check.the_check.type
+}
+
+output "check_target"{
+	value = data.nodeping_check.the_check.target
+}
+
+output "check_enable"{
+	value = data.nodeping_check.the_check.enabled
+}
+
+output "check_public"{
+	value = data.nodeping_check.the_check.public
+}
+
+output "check_runlocations"{
+	value = tolist(data.nodeping_check.the_check.runlocations)[0]
+}
+
+output "check_notifications"{
+	value = tolist(data.nodeping_check.the_check.notifications)
+}

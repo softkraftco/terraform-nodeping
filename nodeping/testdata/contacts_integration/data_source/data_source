@@ -1,0 +1,24 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }
+}
+
+variable "contact_id"{
+	type = string
+}
+
+data "nodeping_contact" "the_contact" {
+	id = var.contact_id
+}
+
+output "contact_name" {
+	value = data.nodeping_contact.the_contact.name
+}
+
+output "contact" {
+	value = data.nodeping_contact.the_contact
+}

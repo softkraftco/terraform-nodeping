@@ -1,9 +1,12 @@
 package nodeping_test
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
+
+	apiClient "terraform-nodeping/nodeping_api_client"
 )
 
 func copyFile(src, dst string) {
@@ -19,14 +22,20 @@ func copyFile(src, dst string) {
 
 func cleanupTerraformDir(terraformDir string) {
 	err := os.RemoveAll(terraformDir + "/.terraform")
-	if err != nil {
+	// don't mind if this is already missing
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		log.Fatal(err)
 	}
 	for _, fileName := range []string{".terraform.lock.hcl", "main.tf",
 		"terraform.tfstate", "terraform.tfstate.backup"} {
 		err = os.Remove(terraformDir + "/" + fileName)
-		if err != nil {
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
 			log.Fatal(err)
 		}
 	}
+}
+
+func getClient() *apiClient.Client {
+	token := os.Getenv("NODEPING_API_TOKEN")
+	return apiClient.NewClient(token)
 }

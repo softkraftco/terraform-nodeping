@@ -58,6 +58,14 @@ func applyScheduleToSchema(schedule *nodeping_api_client.Schedule, d *schema.Res
 		daySchema := make(map[string]interface{})
 		daySchema["day"] = day
 		for configName, configValue := range dayConfig {
+			// exclude can be a bool, but also an 0 or 1
+			if configName == "exclude" {
+				if configValue == float64(0) {
+					configValue = false
+				} else if configValue == float64(1) {
+					configValue = true
+				}
+			}
 			daySchema[configName] = configValue
 		}
 		daysSchemasList[counter] = daySchema

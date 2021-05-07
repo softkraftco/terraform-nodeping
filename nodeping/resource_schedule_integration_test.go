@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -15,7 +14,9 @@ import (
 )
 
 func TestTerraformScheduleLifeCycle(t *testing.T) {
-	const terraformDir = "testdata/schedules_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/schedules_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
@@ -33,8 +34,7 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// prepare context for client
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -15,7 +14,9 @@ import (
 )
 
 func TestTerraformContactLifeCycle(t *testing.T) {
-	const terraformDir = "testdata/contacts_integration"
+	t.Parallel()
+
+	const terraformDir = "testdata/contacts_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
 	// create main.tf
@@ -31,8 +32,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	defer cleanupTerraformDir(terraformDir)
 
 	// prepare API client
-	token := os.Getenv("NODEPING_API_TOKEN")
-	client := apiClient.NewClient(token)
+	client := getClient()
 
 	// -----------------------------------
 	// create a single contact
