@@ -32,7 +32,7 @@ func NewClient(token string) *Client {
 }
 
 func (client *Client) doRequest(ctx context.Context, method string, url string, data []byte) ([]byte, error) {
-	request, err := client.prepareRequest2(ctx, method, url, data)
+	request, err := client.prepareRequest(ctx, method, url, data)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (client *Client) doRequest(ctx context.Context, method string, url string, 
 	return body, nil
 }
 
-func (client *Client) prepareRequest2(ctx context.Context, method string, url string, data []byte) (*http.Request, error) {
+func (client *Client) prepareRequest(ctx context.Context, method string, url string, data []byte) (*http.Request, error) {
 	// prepare data to be sent
 	var body *strings.Reader
 	if data != nil {

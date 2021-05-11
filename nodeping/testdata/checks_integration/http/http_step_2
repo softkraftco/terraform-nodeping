@@ -9,7 +9,7 @@ terraform {
 
 resource "nodeping_contact" "first_contact"{
 	custrole = "owner"
-	name = "FirstContact"
+	name = "ContactForHTTP"
 	addresses {
 		address = "first@o1.com"
 		type = "email"
