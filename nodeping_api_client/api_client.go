@@ -53,7 +53,7 @@ func (client *Client) prepareRequest(ctx context.Context, method string, url str
 	}
 
 	// initialize request
-	reqest, err := http.NewRequestWithContext(ctx, method, url, body)
+	request, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -62,32 +62,41 @@ func (client *Client) prepareRequest(ctx context.Context, method string, url str
 	// from API docs: The password will be ignored so you can either leave it
 	// blank or pass a random string
 	authStr := b64.StdEncoding.EncodeToString([]byte(client.Token + ":whatever"))
-	reqest.Header.Set("Authorization", "Basic "+authStr)
+	request.Header.Set("Authorization", "Basic "+authStr)
 
 	// set json content type for request that have data to be sent
 	if data != nil {
-		reqest.Header.Set("Content-Type", "application/json")
+		request.Header.Set("Content-Type", "application/json")
 	}
 
-	return reqest, nil
+	return request, nil
 }
 
 func (client *Client) sendRequest(request *http.Request) ([]byte, error) {
 	// send
+	println(">>> 0", request.URL.String(), request.Method)
+	cpy, _ := request.GetBody()
+	data, _ := ioutil.ReadAll(cpy)
+	println(string(data))
 	response, err := client.HTTPClient.Do(request)
 	if err != nil {
+		println(">>> 1x", err.Error())
 		return nil, err
 	}
 
+	println(">>> 2", response.Status)
 	// cleanup
 	defer response.Body.Close()
-
+	println(">>> 3")
 	// read response
 	body, err := ioutil.ReadAll(response.Body)
+	println(">>> 4")
 	if err != nil {
 		return nil, err
 	}
-
+	println(">>> 5")
+	println(string(body))
+	println("↑↑↑↑")
 	// error handling
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("status: %d, body: %s", response.StatusCode, body)
