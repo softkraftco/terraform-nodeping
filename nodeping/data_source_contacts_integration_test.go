@@ -14,8 +14,6 @@ import (
 )
 
 func TestContactDataSource(t *testing.T) {
-	t.Parallel()
-
 	const terraformDir = "testdata/contacts_integration/data_source"
 	const terraformMainFile = terraformDir + "/main.tf"
 

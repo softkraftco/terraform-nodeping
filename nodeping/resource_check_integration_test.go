@@ -11,8 +11,6 @@ import (
 )
 
 func TestTerraformCheckLifeCycle(t *testing.T) {
-	t.Parallel()
-
 	const terraformDir = "testdata/checks_integration/resource"
 	const terraformMainFile = terraformDir + "/main.tf"
 
@@ -171,8 +169,6 @@ func TestTerraformHTTPCheck(t *testing.T) {
 	/*
 		Checks if changes to HTTP specific attributes work properly.
 	*/
-	t.Parallel()
-
 	const terraformDir = "testdata/checks_integration/http"
 	const terraformMainFile = terraformDir + "/main.tf"
 
@@ -232,8 +228,6 @@ func TestTerraformSSHCheck(t *testing.T) {
 	/*
 		Checks if changes to SSH specific attributes work properly.
 	*/
-	t.Parallel()
-
 	const terraformDir = "testdata/checks_integration/ssh"
 	const terraformMainFile = terraformDir + "/main.tf"
 
@@ -301,8 +295,6 @@ func TestTerraformSSLCheck(t *testing.T) {
 	/*
 		Checks if changes to SSL specific attributes work properly.
 	*/
-	t.Parallel()
-
 	const terraformDir = "testdata/checks_integration/ssl"
 	const terraformMainFile = terraformDir + "/main.tf"
 
@@ -324,7 +316,9 @@ func TestTerraformSSLCheck(t *testing.T) {
 
 	// -----------------------------------
 	// create a single SSL check
+	println("TestTerraformSSLCheck APPLY")
 	terraform.Apply(t, terraformOptions)
+	println("TestTerraformSSLCheck APPLY DONE")
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

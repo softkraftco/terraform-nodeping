@@ -13,8 +13,6 @@ import (
 )
 
 func TestCheckDataSource(t *testing.T) {
-	t.Parallel()
-
 	// prepare API client
 	client := getClient()
 
