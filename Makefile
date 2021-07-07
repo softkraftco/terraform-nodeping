@@ -22,7 +22,7 @@ endif
 	$(eval TF_SUP_PATCH := $(shell echo $(TF_SUPPORTED_VERSION) | cut -f3 -d.))
 
 	@if [ $(TF_VER_MAJOR) -ge $(TF_SUP_MAJOR) ] && [ $(TF_VER_MINOR) -ge $(TF_SUP_MINOR) ] && [ $(TF_VER_PATCH) -ge $(TF_SUP_PATCH) ]; then \
-        echo "Required terraform version has found"; \
+        echo "Required terraform version has been found"; \
     else \
 		echo "Wrong terraform version. Minimal supported version: 1.0.0"; exit 1; \
     fi
