@@ -369,6 +369,7 @@ resource "nodeping_check" "ssl_check"{
 	label = "SSLExampleCheck"
 	type = "SSL"
 	target = "https://example.com"
+	interval = 1440
 	notifications {
 		contact = nodeping_contact.first_contact.addresses[0].id
 		delay = 1
