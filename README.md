@@ -351,7 +351,7 @@ output "schedule" {
 ```
 
 ## More examples
-### Check ssl 
+### SSL validation 
 
 A very simple check for the ssl cetrificate with notification over an e-mail 10 days before expiry. 
 
