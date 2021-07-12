@@ -350,6 +350,35 @@ output "schedule" {
 }
 ```
 
+## More examples
+### SSL validation 
+
+A very simple check for the ssl cetrificate with notification over an e-mail 10 days before expiry. 
+
+```
+esource "nodeping_contact" "first_contact"{
+	custrole = "owner"
+	name = "Foo Bar"
+	addresses {
+		address = "foo@example.com"
+		type = "email"
+	}
+}
+
+resource "nodeping_check" "ssl_check"{
+	label = "SSLExampleCheck"
+	type = "SSL"
+	target = "https://example.com"
+	interval = 1440
+	notifications {
+		contact = nodeping_contact.first_contact.addresses[0].id
+		delay = 1
+		schedule = "Days"
+	}
+	warningdays = 10
+}
+```
+
 ## Development
 
 It will be useful, from a developers stand point, to set `TF_LOG=DEBUG`. More info [here](https://www.terraform.io/docs/internals/debugging.html).
