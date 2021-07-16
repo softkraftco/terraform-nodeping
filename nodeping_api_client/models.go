@@ -154,3 +154,10 @@ type Schedule struct {
 	CustomerId string                            `json:"customer_id,omitempty"`
 	Data       map[string]map[string]interface{} `json:"data,omitempty"`
 }
+
+type Group struct {
+	ID         string   `json:"_id,omitempty"`
+	CustomerId string   `json:"customer_id,omitempty"`
+	Name       string   `json:"name"`
+	Members    []string `json:"members"`
+}
