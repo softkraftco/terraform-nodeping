@@ -44,7 +44,6 @@ func (client *Client) CreateGroup(ctx context.Context, group *Group) (*Group, er
 		Creates a new group
 	*/
 
-	fmt.Print("aaaaaaaa")
 	rb, err := json.Marshal(group)
 	if err != nil {
 		return nil, err
