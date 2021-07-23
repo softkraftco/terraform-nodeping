@@ -1,0 +1,28 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }
+}
+
+variable "group_id"{
+	type = string
+}
+
+data "nodeping_group" "the_group" {
+	id = var.group_id
+}
+
+output "group_name" {
+	value = data.nodeping_group.the_group.name
+}
+
+output "group_id" {
+	value = data.nodeping_group.the_group.id
+}
+
+output "group" {
+	value = data.nodeping_group.the_group
+}

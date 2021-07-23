@@ -26,11 +26,13 @@ func Provider() *schema.Provider {
 			"nodeping_contact":  resourceContact(),
 			"nodeping_check":    resourceCheck(),
 			"nodeping_schedule": resourceSchedule(),
+			"nodeping_group":    resourceGroup(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"nodeping_check":    dataSourceCheck(),
 			"nodeping_contact":  dataSourceContact(),
 			"nodeping_schedule": dataSourceSchedule(),
+			"nodeping_group":    dataSourceGroup(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
