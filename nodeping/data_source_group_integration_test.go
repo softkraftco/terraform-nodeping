@@ -2,6 +2,7 @@ package nodeping_test
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"testing"
 	"time"
@@ -9,6 +10,7 @@ import (
 	apiClient "terraform-nodeping/nodeping_api_client"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGroupDataSource(t *testing.T) {
@@ -62,11 +64,11 @@ func TestGroupDataSource(t *testing.T) {
 
 	group = *groupPtr
 
-	// prepare group cleanup
-	defer client.DeleteGroup(ctx, group.ID)
-
 	// prepare contact cleanup
 	defer client.DeleteContact(ctx, contact.ID)
+
+	// prepare group cleanup
+	defer client.DeleteGroup(ctx, group.ID)
 
 	// create main.tf
 	copyFile(terraformDir+"/data_source", terraformMainFile)
@@ -76,35 +78,33 @@ func TestGroupDataSource(t *testing.T) {
 		TerraformDir: terraformDir,
 		MaxRetries:   0,
 		Upgrade:      true,
-		//Vars:         map[string]interface{}{"group_id": group.ID},
+		Vars:         map[string]interface{}{"group_id": group.ID},
 	})
 	terraform.Init(t, terraformOptions)
 
 	// // prepare cleanup
-	//defer cleanupTerraformDir(terraformDir)
+	defer cleanupTerraformDir(terraformDir)
 
 	// // -----------------------------------
-	// read a contact
+	// read a group
 	terraform.Apply(t, terraformOptions)
 
-	// assert.Equal(t, group.Name, terraform.Output(t, terraformOptions, "group_name"))
+	assert.Equal(t, group.Name, terraform.Output(t, terraformOptions, "group_name"))
 
-	// // get contact from output
-	// output := terraform.OutputJson(t, terraformOptions, "group")
+	// get group from output
+	output := terraform.OutputJson(t, terraformOptions, "group")
 
-	// var outputObj map[string]interface{}
-	// json.Unmarshal([]byte(output), &outputObj)
+	var outputObj map[string]interface{}
+	json.Unmarshal([]byte(output), &outputObj)
 
-	// // check content
-	// assert.Equal(t, group.Name, outputObj["name"].(string))
-	// assert.Equal(t, group.ID, outputObj["id"].(string))
-	// assert.Equal(t, contact.Custrole, outputObj["custrole"].(string))
-	// assert.Equal(t, contact.Type, outputObj["type"].(string))
+	// check content
+	assert.Equal(t, group.Name, outputObj["name"].(string))
+	assert.Equal(t, group.ID, outputObj["id"].(string))
+	assert.Equal(t, group.CustomerId, outputObj["customer_id"].(string))
 
-	// // unwrap "addresses"
-	// addressData := outputObj["addresses"].([]interface{})[0].(map[string]interface{})
-	// assert.Equal(t, address.Address, addressData["address"].(string))
-	// assert.Equal(t, address.Type, addressData["type"].(string))
-	// assert.Greater(t, len(addressData["id"].(string)), 0)
-	// assert.Equal(t, false, addressData["suppressall"].(bool))
+	// unwrap "members" and check
+	member1 := outputObj["members"].([]interface{})[0].(string)
+	member2 := outputObj["members"].([]interface{})[1].(string)
+	assert.Equal(t, group.Members[0], member1)
+	assert.Equal(t, group.Members[1], member2)
 }

@@ -8,8 +8,12 @@ terraform {
 }
 
 
+variable "group_id"{
+	type = string
+}
+
 data "nodeping_group" "the_group" {
-	name = "Test group"
+	id = var.group_id
 }
 
 output "group_name" {

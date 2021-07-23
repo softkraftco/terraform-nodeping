@@ -1,0 +1,26 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }  
+}
+
+resource "nodeping_contact" "first_contact"{
+	custrole = "owner"
+	name = "Primary email contact"
+	addresses {
+		address = "aaa@bbb.cc"
+		type = "email"
+	}
+}
+
+resource "nodeping_group" "the_group"{
+	name = "test"
+	members = [nodeping_contact.first_contact.addresses[0].id]
+}
+
+output "group_id" {
+	value = nodeping_group.the_group.id
+}
