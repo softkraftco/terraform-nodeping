@@ -82,10 +82,10 @@ func TestGroupDataSource(t *testing.T) {
 	})
 	terraform.Init(t, terraformOptions)
 
-	// // prepare cleanup
+	// prepare cleanup
 	defer cleanupTerraformDir(terraformDir)
 
-	// // -----------------------------------
+	// -----------------------------------
 	// read a group
 	terraform.Apply(t, terraformOptions)
 

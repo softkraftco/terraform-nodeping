@@ -16,7 +16,6 @@ resource "nodeping_contact" "first_contact"{
 	}
 }
 
-
 resource "nodeping_contact" "second_contact"{
 	custrole = "owner"
 	name = "Primary email contact"
@@ -25,7 +24,6 @@ resource "nodeping_contact" "second_contact"{
 		type = "email"
 	}
 }
-
 
 resource "nodeping_group" "the_group"{
 	name = "test2"

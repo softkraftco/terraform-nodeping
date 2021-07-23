@@ -51,7 +51,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 	assert.Equal(t, "test", group.Name)
 	assert.Equal(t, 1, len(group.Members))
 
-	// // -----------------------------------
+	// -----------------------------------
 	// change group data
 	copyFile(terraformDir+"/step_2", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
@@ -66,7 +66,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 	assert.Equal(t, "test2", group.Name)
 	assert.Equal(t, 2, len(group.Members))
 
-	// // -----------------------------------
+	// -----------------------------------
 	// change group data once more
 	copyFile(terraformDir+"/step_3", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
@@ -79,7 +79,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 	}
 	assert.Equal(t, groupID, group.ID)
 	assert.Equal(t, 0, len(group.Members))
-	// // -----------------------------------
+	// -----------------------------------
 	// // destroy
 	terraform.Destroy(t, terraformOptions)
 	group, err = client.GetGroup(ctx, groupID)

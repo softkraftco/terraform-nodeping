@@ -10,11 +10,6 @@ import (
 )
 
 func resourceGroup() *schema.Resource {
-	// prepare accepted values for validation
-	// addressTypes := []string{"email", "sms", "webhook", "slack", "hipchat", "pushover", "pagerduty", "voice"}
-	// custroles := []string{"owner", "edit", "view", "notify"}
-	// webhookActions := []string{"GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"}
-
 	return &schema.Resource{
 		CreateContext: resourceGroupCreate,
 		ReadContext:   resourceGroupRead,
@@ -46,7 +41,6 @@ func getGroupFromSchema(d *schema.ResourceData) *nodeping_api_client.Group {
 
 func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
-
 	group := getGroupFromSchema(d)
 
 	savedGroup, err := client.CreateGroup(ctx, group)
@@ -76,7 +70,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{
 
 func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
-
 	group := getGroupFromSchema(d)
 
 	_, err := client.UpdateGroup(ctx, group)

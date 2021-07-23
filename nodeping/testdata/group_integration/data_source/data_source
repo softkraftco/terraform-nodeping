@@ -7,7 +7,6 @@ terraform {
   }
 }
 
-
 variable "group_id"{
 	type = string
 }

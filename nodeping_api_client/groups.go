@@ -16,10 +16,6 @@ func (err *GroupDoesNotExist) Error() string {
 }
 
 func (client *Client) GetGroup(ctx context.Context, Id string) (*Group, error) {
-	/*
-		Returns a single group.
-	*/
-
 	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contactgroups/%s", client.HostURL, Id), nil)
 	if err != nil {
 		return nil, err
@@ -40,10 +36,6 @@ func (client *Client) GetGroup(ctx context.Context, Id string) (*Group, error) {
 }
 
 func (client *Client) CreateGroup(ctx context.Context, group *Group) (*Group, error) {
-	/*
-		Creates a new group
-	*/
-
 	rb, err := json.Marshal(group)
 	if err != nil {
 		return nil, err
@@ -64,14 +56,6 @@ func (client *Client) CreateGroup(ctx context.Context, group *Group) (*Group, er
 }
 
 func (client *Client) UpdateGroup(ctx context.Context, group *Group) (*Group, error) {
-	/*
-		Updates an existing contact.
-
-		Note about addresses from nodeping documentation:
-		> When updating existing addresses, the entire list is required.
-		> Entries missing from the object are removed from the contact [...].
-		> Adding non-existing address IDs to the list will generate an error.
-	*/
 	rb, err := json.Marshal(group)
 	if err != nil {
 		return nil, err
@@ -95,9 +79,6 @@ func (client *Client) UpdateGroup(ctx context.Context, group *Group) (*Group, er
 }
 
 func (client *Client) DeleteGroup(ctx context.Context, Id string) error {
-	/*
-		Deletes an existing group
-	*/
 	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/contactgroups/%s", client.HostURL, Id), nil)
 	return err
 }
