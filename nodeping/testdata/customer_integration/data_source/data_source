@@ -1,0 +1,28 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }
+}
+
+variable "customer_id"{
+	type = string
+}
+
+data "nodeping_customer" "the_customer" {
+	id = var.customer_id
+}
+
+output "name" {
+	value = data.nodeping_customer.the_customer.name
+}
+
+output "customer_id" {
+	value = data.nodeping_customer.the_customer.id
+}
+
+output "customer" {
+	value = data.nodeping_customer.the_customer
+}
