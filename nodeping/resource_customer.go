@@ -74,10 +74,6 @@ func resourceCustomerRead(ctx context.Context, d *schema.ResourceData, m interfa
 	d.Set("timezone", customer.Timezone)
 	d.Set("customer_name", customer.ContactName)
 
-	// d.Set("customer_id", customer.)
-	// d.Set("name", group.Name)
-	// d.Set("members", group.Members)
-
 	return nil
 }
 

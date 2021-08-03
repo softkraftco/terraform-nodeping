@@ -38,7 +38,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	defer cancel()
 
 	// -----------------------------------
-	// create a single group
+	// create a single customer
 	terraform.Apply(t, terraformOptions)
 
 	customerID := terraform.Output(t, terraformOptions, "customer_id")
@@ -55,7 +55,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	assert.Equal(t, customer.Emailme, false)
 
 	// -----------------------------------
-	// change group data
+	// change customer data
 	copyFile(terraformDir+"/step_2", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
 
