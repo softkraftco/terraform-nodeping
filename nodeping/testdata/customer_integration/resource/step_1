@@ -19,7 +19,3 @@ resource "nodeping_customer" "new_subaccount"{
 output "customer_id" {
 	value = nodeping_customer.new_subaccount.id
 }
-
-output "first_contact_id" {
-	value = nodeping_contact.first_contact.id
-}
