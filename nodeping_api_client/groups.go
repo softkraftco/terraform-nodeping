@@ -15,8 +15,8 @@ func (err *GroupDoesNotExist) Error() string {
 	return fmt.Sprintf("Group '%s' does not exist.", err.groupId)
 }
 
-func (client *Client) GetGroup(ctx context.Context, Id string) (*Group, error) {
-	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contactgroups/%s", client.HostURL, Id), nil)
+func (client *Client) GetGroup(ctx context.Context, customerId, Id string) (*Group, error) {
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contactgroups/?id=%s&customerid=%s", client.HostURL, Id, customerId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (client *Client) GetGroup(ctx context.Context, Id string) (*Group, error) {
 }
 
 func (client *Client) CreateGroup(ctx context.Context, group *Group) (*Group, error) {
-	rb, err := json.Marshal(group)
+	rb, err := group.MarshalJSONForCreate()
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (client *Client) UpdateGroup(ctx context.Context, group *Group) (*Group, er
 	// although json already contains contact "_id", the API seems to require
 	// "id" this time, so it's easier to simply add id to url.
 	body, err := client.doRequest(ctx, "PUT",
-		fmt.Sprintf("%s/contactgroups/%s", client.HostURL, group.ID), rb)
+		fmt.Sprintf("%s/contactgroups/?id=%s&customerid=%s", client.HostURL, group.ID, group.CustomerId), rb)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (client *Client) UpdateGroup(ctx context.Context, group *Group) (*Group, er
 	return &newGroup, nil
 }
 
-func (client *Client) DeleteGroup(ctx context.Context, Id string) error {
-	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/contactgroups/%s", client.HostURL, Id), nil)
+func (client *Client) DeleteGroup(ctx context.Context, customerId, Id string) error {
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/contactgroups/?id=%s&customerid=%s", client.HostURL, Id, customerId), nil)
 	return err
 }
