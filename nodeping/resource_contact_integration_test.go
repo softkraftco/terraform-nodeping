@@ -36,9 +36,10 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	// create a single contact
 	terraform.Apply(t, terraformOptions)
 	firstContractId := terraform.Output(t, terraformOptions, "first_contact_id")
+	firstContractCustomerId := terraform.Output(t, terraformOptions, "first_contact_customer_id")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err := client.GetContact(ctx, firstContractId)
+	firstContact, err := client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +60,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	assert.Equal(t, firstContractId, terraform.Output(t, terraformOptions, "first_contact_id"))
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,7 +75,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	assert.Equal(t, firstContractId, terraform.Output(t, terraformOptions, "first_contact_id"))
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +93,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,7 +127,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -153,15 +154,16 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, firstContractCustomerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	secondContractId := terraform.Output(t, terraformOptions, "second_contact_id")
+	secondContractCustomerId := terraform.Output(t, terraformOptions, "second_contact_customer_id")
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	secondContract, err := client.GetContact(ctx, secondContractId)
+	secondContract, err := client.GetContact(ctx, secondContractCustomerId, secondContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -174,7 +176,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstContact, err = client.GetContact(ctx, firstContractId)
+	firstContact, err = client.GetContact(ctx, secondContractCustomerId, firstContractId)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
 		case *apiClient.ContactDoesNotExist:
@@ -187,7 +189,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	assert.Equal(t, secondContractId, terraform.Output(t, terraformOptions, "second_contact_id"))
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	secondContract, err = client.GetContact(ctx, secondContractId)
+	secondContract, err = client.GetContact(ctx, secondContractCustomerId, secondContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -199,7 +201,7 @@ func TestTerraformContactLifeCycle(t *testing.T) {
 	terraform.Destroy(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	secondContract, err = client.GetContact(ctx, secondContractId)
+	secondContract, err = client.GetContact(ctx, secondContractCustomerId, secondContractId)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
 		case *apiClient.ContactDoesNotExist:
