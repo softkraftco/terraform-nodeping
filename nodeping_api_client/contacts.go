@@ -23,30 +23,6 @@ func (err *ContactDoesNotExist) Error() string {
 	return fmt.Sprintf("Contact '%s' does not exist.", err.contactId)
 }
 
-// func (client *Client) GetContact(ctx context.Context, Id string) (*Contact, error) {
-// 	/*
-// 		Returns a single contact.
-// 	*/
-
-// 	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contacts/%s", client.HostURL, Id), nil)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	if string(body) == "{}" {
-// 		e := ContactDoesNotExist{Id}
-// 		return nil, &e
-// 	}
-
-// 	contact := Contact{}
-// 	err = json.Unmarshal(body, &contact)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return &contact, nil
-// }
-
 func (client *Client) GetContacts(ctx context.Context, customerId string) ([]*Contact, error) {
 
 	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/contacts/?customerid=%s", client.HostURL, customerId), nil)
