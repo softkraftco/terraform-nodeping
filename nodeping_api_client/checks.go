@@ -7,11 +7,11 @@ import (
 	"net/http"
 )
 
-func (client *Client) GetCheck(ctx context.Context, customerID, Id string) (*Check, error) {
+func (client *Client) GetCheck(ctx context.Context, customerId, Id string) (*Check, error) {
 	/*
 		Returns a check.
 	*/
-	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/checks/?id=%s&customerid=%s", client.HostURL, Id, customerID), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/checks/?id=%s&customerid=%s", client.HostURL, Id, customerId), nil)
 	if err != nil {
 		return nil, err
 	}
