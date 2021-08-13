@@ -12,7 +12,10 @@ import (
 func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	group, err := client.GetGroup(ctx, d.Get("id").(string))
+	groupId := d.Get("id").(string)
+	customerId := d.Get("customer_id").(string)
+
+	group, err := client.GetGroup(ctx, customerId, groupId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -30,7 +33,7 @@ func dataSourceGroup() *schema.Resource {
 		ReadContext: dataSourceGroupRead,
 		Schema: map[string]*schema.Schema{
 			"id":          &schema.Schema{Type: schema.TypeString, Required: true},
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"members":     &schema.Schema{Type: schema.TypeList, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
 		},

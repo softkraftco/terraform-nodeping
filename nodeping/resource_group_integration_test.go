@@ -42,8 +42,9 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 
 	groupID := terraform.Output(t, terraformOptions, "group_id")
+	groupCustomerID := terraform.Output(t, terraformOptions, "group_customer_id")
 
-	group, err := client.GetGroup(ctx, groupID)
+	group, err := client.GetGroup(ctx, groupCustomerID, groupID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,7 +59,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 
 	assert.Equal(t, groupID, terraform.Output(t, terraformOptions, "group_id"))
 
-	group, err = client.GetGroup(ctx, groupID)
+	group, err = client.GetGroup(ctx, groupCustomerID, groupID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +74,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 
 	assert.Equal(t, groupID, terraform.Output(t, terraformOptions, "group_id"))
 
-	group, err = client.GetGroup(ctx, groupID)
+	group, err = client.GetGroup(ctx, groupCustomerID, groupID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +83,7 @@ func TestTerraformGroupLifeCycle(t *testing.T) {
 	// -----------------------------------
 	// // destroy
 	terraform.Destroy(t, terraformOptions)
-	group, err = client.GetGroup(ctx, groupID)
+	group, err = client.GetGroup(ctx, groupCustomerID, groupID)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
 		case *apiClient.GroupDoesNotExist:
