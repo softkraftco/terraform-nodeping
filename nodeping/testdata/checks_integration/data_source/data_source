@@ -20,6 +20,10 @@ output "check_id" {
 	value = data.nodeping_check.the_check.id
 }
 
+output "first_check_customer_id" {
+	value = data.nodeping_check.the_check.customer_id
+}
+
 output "check_type" {
 	value = data.nodeping_check.the_check.type
 }

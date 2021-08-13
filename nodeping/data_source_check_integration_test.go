@@ -42,7 +42,7 @@ func TestCheckDataSource(t *testing.T) {
 		log.Fatal(err)
 	}
 	// prepare cleanup
-	defer client.DeleteCheck(ctx, check.ID)
+	defer client.DeleteCheck(ctx, check.CustomerId, check.ID)
 
 	const terraformDir = "testdata/checks_integration/data_source"
 	const terraformMainFile = terraformDir + "/main.tf"

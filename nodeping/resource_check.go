@@ -28,7 +28,7 @@ func resourceCheck() *schema.Resource {
 		UpdateContext: resourceCheckUpdate,
 		DeleteContext: resourceCheckDelete,
 		Schema: map[string]*schema.Schema{
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"type": &schema.Schema{Type: schema.TypeString, Required: true,
 				ValidateFunc: validation.StringInSlice(checkTypes, false)},
 			"target":       &schema.Schema{Type: schema.TypeString, Optional: true},
@@ -319,13 +319,17 @@ func resourceCheckCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	}
 
 	d.SetId(savedCheck.ID)
+	d.Set("customer_id", savedCheck.CustomerId)
 	return resourceCheckRead(ctx, d, m)
 }
 
 func resourceCheckRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	check, err := client.GetCheck(ctx, d.Id())
+	checkId := d.Id()
+	customerId := d.Get("customer_id").(string)
+
+	check, err := client.GetCheck(ctx, customerId, checkId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -354,7 +358,9 @@ func resourceCheckUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 func resourceCheckDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	err := client.DeleteCheck(ctx, d.Id())
+	checkId := d.Id()
+	customerId := d.Get("customer_id").(string)
+	err := client.DeleteCheck(ctx, customerId, checkId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
