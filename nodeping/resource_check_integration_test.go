@@ -16,11 +16,13 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	// create main.tf
 	copyFile(terraformDir+"/http_step_1", terraformMainFile)
+	//terraformDir+"/http_step_1", "/Users/lukaszglowacki/projects/github.com/softkraftco/terraform-nodeping/debug.txt")
 
 	// initialize terraform
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: terraformDir,
 		MaxRetries:   1,
+		Upgrade:      true,
 	})
 	terraform.Init(t, terraformOptions)
 
@@ -35,10 +37,11 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
 	firstAddressId := terraform.Output(t, terraformOptions, "first_address_id")
+	customerId := terraform.Output(t, terraformOptions, "first_check_customer_id")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	firstCheck, err := client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -71,7 +74,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,7 +104,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -130,7 +133,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -147,7 +150,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -161,7 +164,7 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 	terraform.Destroy(t, terraformOptions)
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	_, err = client.GetCheck(ctx, firstCheckId)
+	_, err = client.GetCheck(ctx, customerId, firstCheckId)
 	assert.Error(t, err)
 }
 
@@ -192,10 +195,11 @@ func TestTerraformHTTPCheck(t *testing.T) {
 	// create a single HTTP check
 	terraform.Apply(t, terraformOptions)
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+	customerId := terraform.Output(t, terraformOptions, "first_check_customer_id")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	firstCheck, err := client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -212,7 +216,7 @@ func TestTerraformHTTPCheck(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -251,10 +255,11 @@ func TestTerraformSSHCheck(t *testing.T) {
 	// create a single SSH check
 	terraform.Apply(t, terraformOptions)
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+	customerId := terraform.Output(t, terraformOptions, "first_check_customer_id")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	firstCheck, err := client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -275,7 +280,7 @@ func TestTerraformSSHCheck(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -320,10 +325,11 @@ func TestTerraformSSLCheck(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 	println("TestTerraformSSLCheck APPLY DONE")
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
+	customerId := terraform.Output(t, terraformOptions, "first_check_customer_id")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err := client.GetCheck(ctx, firstCheckId)
+	firstCheck, err := client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -340,7 +346,7 @@ func TestTerraformSSLCheck(t *testing.T) {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	firstCheck, err = client.GetCheck(ctx, firstCheckId)
+	firstCheck, err = client.GetCheck(ctx, customerId, firstCheckId)
 	if err != nil {
 		log.Fatal(err)
 	}
