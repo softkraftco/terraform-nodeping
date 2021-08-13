@@ -43,8 +43,9 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 
 	scheduleName := terraform.Output(t, terraformOptions, "first_schedule_name")
+	scheduleCustomerId := terraform.Output(t, terraformOptions, "first_schedule_customer_id")
 
-	schedule, err := client.GetSchedule(ctx, scheduleName)
+	schedule, err := client.GetSchedule(ctx, scheduleCustomerId, scheduleName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -77,7 +78,7 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 
 	assert.Equal(t, scheduleName, terraform.Output(t, terraformOptions, "first_schedule_name"))
 
-	schedule, err = client.GetSchedule(ctx, scheduleName)
+	schedule, err = client.GetSchedule(ctx, scheduleCustomerId, scheduleName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,7 +109,7 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 
 	assert.Equal(t, scheduleName, terraform.Output(t, terraformOptions, "first_schedule_name"))
 
-	schedule, err = client.GetSchedule(ctx, scheduleName)
+	schedule, err = client.GetSchedule(ctx, scheduleCustomerId, scheduleName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -129,7 +130,7 @@ func TestTerraformScheduleLifeCycle(t *testing.T) {
 	// -----------------------------------
 	// destroy
 	terraform.Destroy(t, terraformOptions)
-	schedule, err = client.GetSchedule(ctx, scheduleName)
+	schedule, err = client.GetSchedule(ctx, scheduleCustomerId, scheduleName)
 	if assert.Error(t, err) {
 		switch e := err.(type) {
 		case *apiClient.ScheduleDoesNotExist:
