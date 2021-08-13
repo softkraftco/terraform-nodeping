@@ -65,10 +65,10 @@ func TestGroupDataSource(t *testing.T) {
 	group = *groupPtr
 
 	// prepare contact cleanup
-	defer client.DeleteContact(ctx, contact.ID)
+	defer client.DeleteContact(ctx, contact.CustomerId, contact.ID)
 
 	// prepare group cleanup
-	defer client.DeleteGroup(ctx, group.ID)
+	defer client.DeleteGroup(ctx, group.CustomerId, group.ID)
 
 	// create main.tf
 	copyFile(terraformDir+"/data_source", terraformMainFile)
