@@ -41,13 +41,13 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	// create a single customer
 	terraform.Apply(t, terraformOptions)
 
-	customerID := terraform.Output(t, terraformOptions, "customer_id")
+	customerId := terraform.Output(t, terraformOptions, "customer_id")
 
-	customer, err := client.GetCustomer(ctx, customerID)
+	customer, err := client.GetCustomer(ctx, customerId)
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, customerID, customer.ID)
+	assert.Equal(t, customerId, customer.ID)
 	assert.Equal(t, customer.Name, "old_subaccount")
 	assert.Equal(t, customer.Status, "Active")
 	assert.Equal(t, customer.Timezone, "1.0")
@@ -69,13 +69,13 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	copyFile(terraformDir+"/step_2", terraformMainFile)
 	terraform.Apply(t, terraformOptions)
 
-	assert.Equal(t, customerID, terraform.Output(t, terraformOptions, "customer_id"))
+	assert.Equal(t, customerId, terraform.Output(t, terraformOptions, "customer_id"))
 
-	customer, err = client.GetCustomer(ctx, customerID)
+	customer, err = client.GetCustomer(ctx, customerId)
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, customerID, customer.ID)
+	assert.Equal(t, customerId, customer.ID)
 	assert.Equal(t, customer.Name, "new_subaccount")
 	assert.Equal(t, customer.Status, "Suspend")
 	assert.Equal(t, customer.Timezone, "2.0")
@@ -97,7 +97,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	terraform.Apply(t, terraformOptions)
 
 	firstContractId := terraform.Output(t, terraformOptions, "first_contact_id")
-	firstContact, err := client.GetContact(ctx, customerID, firstContractId)
+	firstContact, err := client.GetContact(ctx, customerId, firstContractId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,7 +114,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 
 	groupID := terraform.Output(t, terraformOptions, "group_id")
 
-	group, err := client.GetGroup(ctx, customerID, groupID)
+	group, err := client.GetGroup(ctx, customerId, groupID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -124,7 +124,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 
 	scheduleName := terraform.Output(t, terraformOptions, "first_schedule_name")
 
-	schedule, err := client.GetSchedule(ctx, customerID, scheduleName)
+	schedule, err := client.GetSchedule(ctx, customerId, scheduleName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -152,7 +152,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 
 	firstCheckId := terraform.Output(t, terraformOptions, "first_check_id")
 	firstAddressId := terraform.Output(t, terraformOptions, "first_address_id")
-	firstCheck, err := client.GetCheck(ctx, customerID, firstCheckId)
+	firstCheck, err := client.GetCheck(ctx, customerId, firstCheckId)
 
 	if err != nil {
 		log.Fatal(err)
@@ -182,7 +182,7 @@ func TestTerraformCustomerLifeCycle(t *testing.T) {
 	*/
 
 	terraform.Destroy(t, terraformOptions)
-	customer, err = client.GetCustomer(ctx, customerID)
+	customer, err = client.GetCustomer(ctx, customerId)
 	if err != nil {
 		if assert.Error(t, err) {
 			switch e := err.(type) {
