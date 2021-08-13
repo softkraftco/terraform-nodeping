@@ -8,9 +8,9 @@ terraform {
 }
 
 resource "nodeping_customer" "new_subaccount"{
-	name = "old_subaccount"
-	contactname = "John Doe"
-	email = "john@doe.com"
+	name = "new_subaccount"
+	contactname = "Mike"
+	email = "john@doe1.com"
 	timezone = "2.0"
 	location = "nam"
 	emailme = true

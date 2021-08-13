@@ -1,0 +1,142 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }  
+}
+
+resource "nodeping_customer" "new_subaccount"{
+	name = "new_subaccount"
+	contactname = "John"
+	email = "john@doe.com"
+	timezone = "2.0"
+	location = "nam"
+	emailme = true
+	status = "Active"
+}
+
+resource "nodeping_contact" "first_contact"{
+	customer_id = nodeping_customer.new_subaccount.id
+	custrole = "owner"
+	name = "First"
+	addresses {
+		address = "first@o1.com"
+		type = "email"
+	}
+}
+
+resource "nodeping_group" "the_group"{
+	customer_id = nodeping_customer.new_subaccount.id
+	name = "test"
+	members = [nodeping_contact.first_contact.addresses[0].id]
+}
+
+resource "nodeping_schedule" "first_schedule"{
+	customer_id = nodeping_customer.new_subaccount.id
+	name = "FirstSchedule"
+	data {
+		day = "monday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "tuesday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "wednesday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "thursday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "friday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = false
+	}
+	data {
+		day = "saturday"
+		time1 = "6:00"
+		time2 = "7:00"
+		exclude = true
+	}
+	data {
+		day = "sunday"
+		allday = true
+	}
+}
+
+resource "nodeping_check" "first_check"{
+	customer_id = nodeping_customer.new_subaccount.id
+	label = "FirstCheck"
+	type = "HTTP"
+	target = "http://cosiek.eu/"
+	enabled = "inactive"
+	interval = 25
+	public = true
+	runlocations = ["eur", "nam"]
+	threshold = 3
+	sens = 1
+	description = "Testing 123"
+	notifications {
+		contact = nodeping_contact.first_contact.addresses[0].id
+		delay = 1
+		schedule = "Weekdays" 
+	}
+	homeloc = "PL"
+	// http specyfic fields
+	follow = true
+	ipv6 = true
+}
+
+output "customer_id" {
+	value = nodeping_customer.new_subaccount.id
+}
+
+output "first_contact_id" {
+	value = nodeping_contact.first_contact.id
+}
+
+output "first_address_id"{
+	value = nodeping_contact.first_contact.addresses[0].id
+}
+
+output "first_contact_customer_id" {
+	value = nodeping_contact.first_contact.customer_id
+}
+
+output "group_id" {
+	value = nodeping_group.the_group.id
+}
+
+output "group_customer_id" {
+	value = nodeping_group.the_group.customer_id
+}
+
+output "first_schedule_name" {
+	value = nodeping_schedule.first_schedule.name
+}
+
+output "first_check_id" {
+	value = nodeping_check.first_check.id
+}
+
+output "first_check_customer_id" {
+	value = nodeping_check.first_check.customer_id
+}
+
+output "check_customer_id" {
+	value = nodeping_check.first_check.customer_id
+}
