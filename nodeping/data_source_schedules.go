@@ -14,7 +14,7 @@ func dataSourceSchedule() *schema.Resource {
 		ReadContext: dataSourceScheduleRead,
 		Schema: map[string]*schema.Schema{
 			"name":        &schema.Schema{Type: schema.TypeString, Required: true},
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"data": &schema.Schema{
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -36,7 +36,10 @@ func dataSourceSchedule() *schema.Resource {
 func dataSourceScheduleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	schedule, err := client.GetSchedule(ctx, d.Get("name").(string))
+	scheduleId := d.Get("name").(string)
+	customerId := d.Get("customer_id").(string)
+
+	schedule, err := client.GetSchedule(ctx, customerId, scheduleId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
