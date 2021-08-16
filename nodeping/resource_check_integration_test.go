@@ -16,7 +16,6 @@ func TestTerraformCheckLifeCycle(t *testing.T) {
 
 	// create main.tf
 	copyFile(terraformDir+"/http_step_1", terraformMainFile)
-	//terraformDir+"/http_step_1", "/Users/lukaszglowacki/projects/github.com/softkraftco/terraform-nodeping/debug.txt")
 
 	// initialize terraform
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
