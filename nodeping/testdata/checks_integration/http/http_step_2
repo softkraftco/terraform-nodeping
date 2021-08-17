@@ -52,7 +52,6 @@ output "first_check_customer_id" {
 	value = nodeping_check.first_check.customer_id
 }
 
-
 output "first_contact_id" {
 	value = nodeping_contact.first_contact.id
 }
