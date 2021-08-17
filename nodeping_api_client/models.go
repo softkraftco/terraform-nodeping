@@ -166,14 +166,14 @@ type Group struct {
 
 type Customer struct {
 	ID           string `json:"_id,omitempty"`
-	Name         string `json:"customer_name,omitempty"` // tested
+	Name         string `json:"customer_name,omitempty"`
 	Email        string `json:"email,omitempty"`
 	Parent       string `json:"parent,omitempty"`
 	ContactName  string `json:"contact_name"`
 	CreationDate int    `json:"creation_date,omitempty"`
-	Status       string `json:"status"` // tested
+	Status       string `json:"status"`
 	Emailme      bool   `json:"emailme"`
-	Timezone     string `json:"timezone"` // tested
+	Timezone     string `json:"timezone"`
 	Location     string `json:"location"`
 }
 
@@ -184,10 +184,10 @@ func (c *Customer) MarshalJSONForCreate() ([]byte, error) {
 	}
 
 	return json.Marshal(struct {
-		Name        string `json:"name"` // tested
+		Name        string `json:"name"`
 		ContactName string `json:"contactname"`
 		Email       string `json:"email"`
-		Timezone    string `json:"timezone"` // tested
+		Timezone    string `json:"timezone"`
 		Location    string `json:"location"`
 		Emailme     string `json:"emailme,omitempty"`
 		Status      string `json:"status,omitempty"`
@@ -207,7 +207,7 @@ func (customer *Customer) UnmarshalJSON(data []byte) error {
 		Timezone     string   `json:"timezone"`
 		Locations    []string `json:"defaultlocations"`
 	}{}
-	//var v map[string]interface{}
+
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}

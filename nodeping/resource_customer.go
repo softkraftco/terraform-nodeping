@@ -40,12 +40,6 @@ func getCustomerFromSchema(d *schema.ResourceData) *nodeping_api_client.Customer
 	customer.Location = d.Get("location").(string)
 	customer.Emailme = d.Get("emailme").(bool)
 	customer.Status = d.Get("status").(string)
-
-	//customer.Parent = d.Get("parent").(string)
-	// customer.CustomerName = d.Get("customer_name").(string)
-	// customer.CreationDate = d.Get("creation_date").(int)
-	// customer.Status = d.Get("status").(string)
-
 	return &customer
 }
 
