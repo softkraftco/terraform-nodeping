@@ -42,7 +42,7 @@ func TestContactDataSource(t *testing.T) {
 	contact = *contactPtr
 
 	// prepare contact cleanup
-	defer client.DeleteContact(ctx, contact.ID)
+	defer client.DeleteContact(ctx, contact.CustomerId, contact.ID)
 
 	// create main.tf
 	copyFile(terraformDir+"/data_source", terraformMainFile)

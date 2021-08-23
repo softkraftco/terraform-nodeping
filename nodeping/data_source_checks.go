@@ -14,7 +14,7 @@ func dataSourceCheck() *schema.Resource {
 		ReadContext: dataSourceCheckRead,
 		Schema: map[string]*schema.Schema{
 			"id":          &schema.Schema{Type: schema.TypeString, Required: true},
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"label":       &schema.Schema{Type: schema.TypeString, Computed: true},
 			"interval":    &schema.Schema{Type: schema.TypeInt, Computed: true},
 			"notifications": &schema.Schema{
@@ -98,7 +98,11 @@ func dataSourceCheck() *schema.Resource {
 func dataSourceCheckRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	check, err := client.GetCheck(ctx, d.Get("id").(string))
+	checkId := d.Get("id").(string)
+	customerId := d.Get("customer_id").(string)
+
+	check, err := client.GetCheck(ctx, customerId, checkId)
+
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -43,9 +43,12 @@ resource "nodeping_check" "first_check"{
 	ipv6 = true
 }
 
-
 output "first_check_id" {
 	value = nodeping_check.first_check.id
+}
+
+output "first_check_customer_id" {
+	value = nodeping_check.first_check.customer_id
 }
 
 output "first_contact_id" {

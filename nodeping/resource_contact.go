@@ -22,7 +22,7 @@ func resourceContact() *schema.Resource {
 		UpdateContext: resourceContactUpdate,
 		DeleteContext: resourceContactDelete,
 		Schema: map[string]*schema.Schema{
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Optional: true, ValidateFunc: validation.StringInSlice(custroles, false)},
 			"addresses": &schema.Schema{
@@ -126,13 +126,14 @@ func resourceContactCreate(ctx context.Context, d *schema.ResourceData, m interf
 	}
 
 	d.SetId(savedContact.ID)
+	d.Set("customer_id", savedContact.CustomerId)
 	return resourceContactRead(ctx, d, m)
 }
 
 func resourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	contact, err := client.GetContact(ctx, d.Id())
+	contact, err := client.GetContact(ctx, d.Get("customer_id").(string), d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -184,7 +185,10 @@ func resourceContactUpdate(ctx context.Context, d *schema.ResourceData, m interf
 func resourceContactDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	err := client.DeleteContact(ctx, d.Id())
+	contactId := d.Id()
+	customerId := d.Get("customer_id").(string)
+
+	err := client.DeleteContact(ctx, customerId, contactId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

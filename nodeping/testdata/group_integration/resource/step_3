@@ -15,3 +15,7 @@ resource "nodeping_group" "the_group"{
 output "group_id" {
 	value = nodeping_group.the_group.id
 }
+
+output "group_customer_id" {
+	value = nodeping_group.the_group.customer_id
+}

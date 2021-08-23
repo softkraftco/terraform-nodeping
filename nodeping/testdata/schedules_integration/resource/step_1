@@ -55,3 +55,7 @@ resource "nodeping_schedule" "fitst_schedule"{
 output "first_schedule_name" {
 	value = nodeping_schedule.fitst_schedule.name
 }
+
+output "first_schedule_customer_id" {
+	value = nodeping_schedule.fitst_schedule.customer_id
+}

@@ -31,3 +31,7 @@ resource "nodeping_contact" "first_contact"{
 output "first_contact_id" {
 	value = nodeping_contact.first_contact.id
 }
+
+output "first_contact_customer_id" {
+	value = nodeping_contact.first_contact.customer_id
+}
