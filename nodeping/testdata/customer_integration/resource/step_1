@@ -1,0 +1,21 @@
+terraform {
+  required_providers {
+    nodeping = {
+      version = "0.0.1"
+      source  = "softkraft.co/terraform/nodeping"
+    }
+  }  
+}
+
+resource "nodeping_customer" "new_subaccount"{
+	name = "old_subaccount"
+	contactname = "John"
+	email = "john@doe.com"
+	timezone = "1.0"
+	location = "nam"
+	emailme = false
+}
+
+output "customer_id" {
+	value = nodeping_customer.new_subaccount.id
+}

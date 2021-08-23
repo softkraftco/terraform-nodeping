@@ -15,18 +15,18 @@ func (err *ScheduleDoesNotExist) Error() string {
 	return fmt.Sprintf("Schedule '%s' does not exist.", err.scheduleName)
 }
 
-func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, error) {
+func (client *Client) GetSchedule(ctx context.Context, customerId, name string) (*Schedule, error) {
 	/*
 		Returns a schedule.
 	*/
 
-	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/schedules/?id=%s&customerid=%s", client.HostURL, name, customerId), nil)
 	if err != nil {
 		return nil, err
 	}
 
 	if string(body) == "\"\"" {
-		e := ScheduleDoesNotExist{Name}
+		e := ScheduleDoesNotExist{name}
 		return nil, &e
 	}
 
@@ -37,7 +37,8 @@ func (client *Client) GetSchedule(ctx context.Context, Name string) (*Schedule, 
 	}
 
 	// since there is no name in API response, set name manually.
-	schedule.Name = Name
+	schedule.Name = name
+	schedule.CustomerId = customerId
 
 	return &schedule, nil
 }
@@ -58,7 +59,8 @@ func (client *Client) UpdateSchedule(ctx context.Context, schedule *Schedule) (s
 		Updates an existing schedule.
 		Returns an updated version, as given in API response.
 	*/
-	requestBody, err := json.Marshal(schedule)
+	requestBody, err := schedule.MarshalJSONForCreate()
+
 	if err != nil {
 		return "", err
 	}
@@ -77,10 +79,10 @@ func (client *Client) UpdateSchedule(ctx context.Context, schedule *Schedule) (s
 	return responseContent["id"].(string), nil
 }
 
-func (client *Client) DeleteSchedule(ctx context.Context, Name string) error {
+func (client *Client) DeleteSchedule(ctx context.Context, customerId, name string) error {
 	/*
 		Deletes an existing schedule.
 	*/
-	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/schedules/%s", client.HostURL, Name), nil)
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/schedules/?id=%s&customerId=%s", client.HostURL, name, customerId), nil)
 	return err
 }

@@ -21,7 +21,7 @@ func resourceSchedule() *schema.Resource {
 		DeleteContext: resourceScheduleDelete,
 		Schema: map[string]*schema.Schema{
 			"name":        &schema.Schema{Type: schema.TypeString, Required: true},
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"data": &schema.Schema{
 				Type:     schema.TypeSet,
 				Required: true,
@@ -116,13 +116,14 @@ func resourceScheduleCreate(ctx context.Context, d *schema.ResourceData, m inter
 	// anywhere. Instead schedule name (in API docs under the name "id") is used
 	// for schedule identification.
 	d.SetId(schedule.Name)
+	d.Set("customer_id", schedule.CustomerId)
 	return resourceScheduleRead(ctx, d, m)
 }
 
 func resourceScheduleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	schedule, err := client.GetSchedule(ctx, d.Id())
+	schedule, err := client.GetSchedule(ctx, d.Get("customer_id").(string), d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -150,7 +151,10 @@ func resourceScheduleUpdate(ctx context.Context, d *schema.ResourceData, m inter
 func resourceScheduleDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	err := client.DeleteSchedule(ctx, d.Id())
+	scheduleId := d.Id()
+	customerId := d.Get("customer_id").(string)
+
+	err := client.DeleteSchedule(ctx, customerId, scheduleId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

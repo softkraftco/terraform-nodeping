@@ -19,3 +19,7 @@ resource "nodeping_contact" "second_contact"{
 output "second_contact_id" {
 	value = nodeping_contact.second_contact.id
 }
+
+output "second_contact_customer_id" {
+	value = nodeping_contact.second_contact.customer_id
+}

@@ -1,6 +1,8 @@
 package nodeping_api_client
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Address struct {
 	ID            string `json:"id,omitempty"`
@@ -50,7 +52,7 @@ type CheckUpdate struct { // used for PUT and POST requests.
 	*/
 	ID            string                    `json:"_id,omitempty"`
 	Label         string                    `json:"label,omitempty"`
-	CustomerId    string                    `json:"customer_id,omitempty"`
+	CustomerId    string                    `json:"customerid,omitempty"`
 	Type          string                    `json:"type,omitempty"`
 	Target        string                    `json:"target,omitempty"`
 	Interval      int                       `json:"interval,omitempty"`
@@ -121,7 +123,7 @@ func (c *Contact) MarshalJSONForCreate() ([]byte, error) {
 		allowed to have "addresses" field, and doesn't need the "id" field.
 	*/
 	return json.Marshal(struct {
-		CustomerId   string    `json:"customer_id,omitempty"`
+		CustomerId   string    `json:"customerid,omitempty"`
 		Name         string    `json:"name,omitempty"`
 		Custrole     string    `json:"custrole,omitempty"`
 		NewAddresses []Address `json:"newaddresses,omitempty"`
@@ -155,9 +157,86 @@ type Schedule struct {
 	Data       map[string]map[string]interface{} `json:"data,omitempty"`
 }
 
+func (s *Schedule) MarshalJSONForCreate() ([]byte, error) {
+	return json.Marshal(struct {
+		Name       string                            `json:"id,omitempty"`
+		CustomerId string                            `json:"customerid,omitempty"`
+		Data       map[string]map[string]interface{} `json:"data,omitempty"`
+	}{s.Name, s.CustomerId, s.Data})
+}
+
 type Group struct {
 	ID         string   `json:"_id,omitempty"`
 	CustomerId string   `json:"customer_id,omitempty"`
 	Name       string   `json:"name"`
 	Members    []string `json:"members"`
+}
+
+func (g *Group) MarshalJSONForCreate() ([]byte, error) {
+	return json.Marshal(struct {
+		CustomerId string   `json:"customerid,omitempty"`
+		Name       string   `json:"name"`
+		Members    []string `json:"members"`
+	}{g.CustomerId, g.Name, g.Members})
+}
+
+type Customer struct {
+	ID           string `json:"_id,omitempty"`
+	Name         string `json:"customer_name,omitempty"`
+	Email        string `json:"email,omitempty"`
+	Parent       string `json:"parent,omitempty"`
+	ContactName  string `json:"contact_name"`
+	CreationDate int    `json:"creation_date,omitempty"`
+	Status       string `json:"status"`
+	Emailme      bool   `json:"emailme"`
+	Timezone     string `json:"timezone"`
+	Location     string `json:"location"`
+}
+
+func (c *Customer) MarshalJSONForCreate() ([]byte, error) {
+	emailme := "no"
+	if c.Emailme {
+		emailme = "yes"
+	}
+
+	return json.Marshal(struct {
+		Name        string `json:"name"`
+		ContactName string `json:"contactname"`
+		Email       string `json:"email"`
+		Timezone    string `json:"timezone"`
+		Location    string `json:"location"`
+		Emailme     string `json:"emailme,omitempty"`
+		Status      string `json:"status,omitempty"`
+	}{c.Name, c.ContactName, c.Email, c.Timezone, c.Location, emailme, c.Status})
+}
+
+func (customer *Customer) UnmarshalJSON(data []byte) error {
+	v := struct {
+		ID           string   `json:"_id,omitempty"`
+		Name         string   `json:"customer_name,omitempty"`
+		Email        string   `json:"email,omitempty"`
+		Parent       string   `json:"parent,omitempty"`
+		ContactName  string   `json:"contact_name"`
+		CreationDate int      `json:"creation_date,omitempty"`
+		Status       string   `json:"status"`
+		Emailme      bool     `json:"emailme"`
+		Timezone     string   `json:"timezone"`
+		Locations    []string `json:"defaultlocations"`
+	}{}
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	customer.ID = v.ID
+	customer.Name = v.Name
+	customer.Email = v.Email
+	customer.Parent = v.Parent
+	customer.ContactName = v.ContactName
+	customer.CreationDate = v.CreationDate
+	customer.Status = v.Status
+	customer.Emailme = v.Emailme
+	customer.Timezone = v.Timezone
+	customer.Location = v.Locations[0]
+	return nil
 }

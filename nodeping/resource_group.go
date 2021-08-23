@@ -16,7 +16,7 @@ func resourceGroup() *schema.Resource {
 		UpdateContext: resourceGroupUpdate,
 		DeleteContext: resourceGroupDelete,
 		Schema: map[string]*schema.Schema{
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Optional: true},
 			"members":     &schema.Schema{Type: schema.TypeList, Optional: true, Elem: &schema.Schema{Type: schema.TypeString}},
 		},
@@ -49,13 +49,14 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	}
 
 	d.SetId(savedGroup.ID)
+	d.Set("customer_id", savedGroup.CustomerId)
 	return resourceGroupRead(ctx, d, m)
 }
 
 func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	group, err := client.GetGroup(ctx, d.Id())
+	group, err := client.GetGroup(ctx, d.Get("customer_id").(string), d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -83,7 +84,10 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 func resourceGroupDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	err := client.DeleteGroup(ctx, d.Id())
+	groupId := d.Id()
+	customerId := d.Get("customer_id").(string)
+
+	err := client.DeleteGroup(ctx, customerId, groupId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

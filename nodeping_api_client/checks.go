@@ -7,11 +7,11 @@ import (
 	"net/http"
 )
 
-func (client *Client) GetCheck(ctx context.Context, Id string) (*Check, error) {
+func (client *Client) GetCheck(ctx context.Context, customerId, Id string) (*Check, error) {
 	/*
 		Returns a check.
 	*/
-	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
+	body, err := client.doRequest(ctx, http.MethodGet, fmt.Sprintf("%s/checks/?id=%s&customerid=%s", client.HostURL, Id, customerId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +73,10 @@ func (client *Client) UpdateCheck(ctx context.Context, check *CheckUpdate) (*Che
 	return &newCheck, nil
 }
 
-func (client *Client) DeleteCheck(ctx context.Context, Id string) error {
+func (client *Client) DeleteCheck(ctx context.Context, customerId, Id string) error {
 	/*
 		Deletes an existing check.
 	*/
-	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/checks/%s", client.HostURL, Id), nil)
+	_, err := client.doRequest(ctx, "DELETE", fmt.Sprintf("%s/checks/?id=%s&customerid=%s", client.HostURL, Id, customerId), nil)
 	return err
 }

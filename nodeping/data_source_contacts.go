@@ -12,7 +12,10 @@ import (
 func dataSourceContactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*nodeping_api_client.Client)
 
-	contact, err := client.GetContact(ctx, d.Get("id").(string))
+	contactId := d.Get("id").(string)
+	customerId := d.Get("customer_id").(string)
+
+	contact, err := client.GetContact(ctx, customerId, contactId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -73,7 +76,7 @@ func dataSourceContact() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"id":          &schema.Schema{Type: schema.TypeString, Required: true},
 			"type":        &schema.Schema{Type: schema.TypeString, Computed: true},
-			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true},
+			"customer_id": &schema.Schema{Type: schema.TypeString, Computed: true, Optional: true},
 			"name":        &schema.Schema{Type: schema.TypeString, Computed: true},
 			"custrole":    &schema.Schema{Type: schema.TypeString, Computed: true},
 			"addresses": &schema.Schema{
