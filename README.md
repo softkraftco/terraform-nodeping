@@ -81,6 +81,26 @@ This provider supports the following type of resources:
 
 #### Accounts
 
+```hcl
+resource "nodeping_customer" "new_subaccount"{
+	name = "NewSubaccount"
+	contactname = "Contact Name"
+	email = "example@expl.com"
+	timezone = "1.0"
+	location = "nam"
+	emailme = false
+}
+```
+
+Please follow the official documentation [API documentation](https://nodeping.com/docs-api-schedules.html).
+
+- `name` name of the subaccount, used as a label.
+- `contactname` represents a name of the primary contact for the subaccount, used as a label.
+- `email` primary email address for the subaccount.
+- `timezone` main time zone for the subaccount.
+- `location` locations for the subaccount, available values: nam, eur, eao, wlw.
+- `emailme` to opt-in the subaccount for NodePing service and features email notifications.
+- `status` subaccount status, available values:  "Active" or "Suspend".
 
 #### Check
 
@@ -97,7 +117,7 @@ resource "nodeping_check" "some_check"{
 
 The implementation generally follows [API documentation](https://nodeping.com/docs-api-checks.html), with some differences.
 
- - `customerid` customerid of the subaccount the check belongs to.
+ - `customer_id` a customer id of the subaccount the check belongs to.
  - `type` string check type, one of: AGENT, AUDIO, CLUSTER, DOHDOT, DNS, FTP, HTTP, HTTPCONTENT, HTTPPARSE, HTTPADV, IMAP4, MYSQL, NTP, PING, POP3, PORT, PUSH, RBL, RDP, SIP, SMTP, SNMP, SPEC10DNS, SPEC10RDDS, SSH, SSL, WEBSOCKET, WHOIS
  - `target` check target. Note that for HTTP, HTTPCONTENT, HTTPPARSE, and HTTPADV check, this must begin with "http://" or "https://".
  - `label` give this check a label. If this is absent, the target will be used as the label.
@@ -179,7 +199,7 @@ resource "nodeping_contact" "example"{
 
 The provider closely follows [NodePing API](https://nodeping.com/docs-api-contacts.html), so all parameters like `suppressup`, `suppressfirst` and additional parameters for the notification types are available.
 
- - `customerid` customerid of the subaccount to which the contact belongs. Not needed if the contact is in your primary account.
+ - `customer_id` a customer id of the subaccount to which the contact belongs. Not needed if the contact is in your primary account.
  - `name` is the name of the contact, used as a label.
  - `custrole` set to 'edit,' 'view' or 'notify' to set permissions for this contact. Default is 'view'. Contacts created with an 'edit' or 'view' access level will receive a welcome email message, which by default includes a random password and the suggestion that they change the password immediately. You can avoid these messages by creating the contact with a 'notify' custrole, and then updating them to 'edit' or 'view'. You can also change the content of the welcome email message in the Branding preferences.
  - `addresses` optional collection of email addresses and phone numbers. See the example above.
@@ -192,6 +212,30 @@ Additional parameters for the webhook notification type:
  - `data` payload or body of an HTTP POST or PUT request. This can be JSON, XML, or any arbitrary string.
  - `headers` set HTTP request headers
  - `querystrings` set HTTP query string key/values, that will be appended to your webhook URL as part of the query string.
+
+ #### Contactgroups
+
+```hcl
+resource "nodeping_contact" "example"{
+	custrole = "view"
+	name = "Example"
+	addresses {
+		address = "example@expl.com"
+		type = "email"
+	}
+}
+
+
+resource "nodeping_group" "the_group"{
+	name = "test"
+	members = [nodeping_contact.example.addresses[0].id]
+}
+
+```
+
+ - `customer_id` a customerid of the subaccount the check belongs to.
+ - `name` a name of the contact group, used as a label.
+ - `members` an array of address ids belong to the contact group
 
 #### Schedule
 
@@ -219,7 +263,7 @@ output "my_schedule_name" {
 
 Note that the `data` parameter is declared differently than in the official [API documentation](https://nodeping.com/docs-api-schedules.html).
 
- - `customerid` - customerid of the subaccount to which the schedule belongs.
+ - `customer_id` - a customer id of the subaccount to which the schedule belongs.
  - `name` - this parameter is not present in the official documentation. In practice the API requires an `id` parameter when creating a new schedule, but then returns a response like this: `{"ok":true,"id":"100000000000A0A0A"}`, that indicates there is some other id. To avoid this confusion, schedule name is used as its id.
  - `data` - required object containing the schedule (see the example above). Properties inside each day object are as follows:
     - `time1` - start of time span
@@ -242,7 +286,19 @@ terraform {
   }
 }
 
+resource "nodeping_customer" "my_subaccount"{
+	name = "NewSubaccount"
+	contactname = "Contact Name"
+	email =  "my-example@exmp1.com"
+	timezone = "2.0"
+	location = "nam"
+	emailme = true
+	status = "Active"
+}
+
+
 resource "nodeping_contact" "my_contact"{
+	customer_id = nodeping_customer.new_subaccount.id
 	custrole = "owner"
 	name = "MyContact"
 	addresses {
@@ -255,7 +311,14 @@ resource "nodeping_contact" "my_contact"{
 	}
 }
 
+resource "nodeping_group" "my_group"{
+	customer_id = nodeping_customer.my_subaccount.id
+	name = "My Group"
+	members = [nodeping_contact.my_contact.addresses[0].id, nodeping_contact.my_contact.addresses[1].id]
+}
+
 resource "nodeping_schedule" "my_schedule"{
+	customer_id = nodeping_customer.my_subaccount.id
 	name = "MySchedule"
 	data {
 		day = "monday"
@@ -270,6 +333,7 @@ resource "nodeping_schedule" "my_schedule"{
 }
 
 resource "nodeping_check" "my_check"{
+	customer_id = nodeping_customer.my_subaccount.id
 	label = "MyCheck"
 	type = "HTTP"
 	target = "http://example.eu/"
@@ -289,6 +353,9 @@ resource "nodeping_check" "my_check"{
 	ipv6 = true
 }
 
+output "my_customer_id" {
+	value = nodeping_customer.my_subaccount.id
+}
 
 output "my_check_id" {
 	value = nodeping_check.my_check.id
