@@ -81,6 +81,8 @@ This provider supports the following type of resources:
 
 #### Accounts
 
+This is an example declaration of `account` resource. Note that Nodeping in their documentation keeps using `Accounts`, but for the declatarion type uses `customer`, that is why  we use `accounts` for documentation purposes, but `nodeping_customer` for the declaration.
+
 ```hcl
 resource "nodeping_customer" "new_subaccount"{
 	name = "NewSubaccount"
@@ -92,7 +94,7 @@ resource "nodeping_customer" "new_subaccount"{
 }
 ```
 
-Please follow the official documentation [API documentation](https://nodeping.com/docs-api-schedules.html).
+Please follow the official documentation [API documentation](https://nodeping.com/docs-api-accounts.html).
 
 - `name` name of the subaccount, used as a label.
 - `contactname` represents a name of the primary contact for the subaccount, used as a label.
@@ -215,10 +217,12 @@ Additional parameters for the webhook notification type:
 
  #### Contactgroups
 
+ This is an example declaration of `Contactgroups` resource:
+
 ```hcl
 resource "nodeping_contact" "example"{
 	custrole = "view"
-	name = "Example"
+	name = "Example Contact"
 	addresses {
 		address = "example@expl.com"
 		type = "email"
@@ -232,6 +236,8 @@ resource "nodeping_group" "the_group"{
 }
 
 ```
+
+The provider follows the Api documentation [NodePing API](https://nodeping.com/docs-api-contactgroups.html)
 
  - `customer_id` a customerid of the subaccount the check belongs to.
  - `name` a name of the contact group, used as a label.
@@ -376,11 +382,25 @@ output "my_schedule_name" {
 
 ### Data sources
 
-Currently three data sources are implemented: `nodeping_contact`, `nodeping_check`, `nodeping_schedule`.
+Currently three data sources are implemented: `nodeping_customer`, `nodeping_contact`, `nodeping_group`, `nodeping_check`, `nodeping_schedule`.
+
+#### Account
+
+Here's an example use:
+
+```hlc
+data "nodeping_customer" "the_customer" {
+	id = var.customer_id
+}
+
+
+output "customer" {
+	value = data.nodeping_customer.the_customer
+}
+```
 
 #### Contact
 
-Here's an example use:
 
 ```hcl
 data "nodeping_contact" "my_contact" {
@@ -389,6 +409,18 @@ data "nodeping_contact" "my_contact" {
 
 output "contact" {
   value = data.nodeping_contact.my_contact
+}
+```
+
+#### Contactgroup
+
+```hlc
+data "nodeping_group" "the_group" {
+	id = var.group_id
+}
+
+output "group" {
+	value = data.nodeping_group.the_group
 }
 ```
 
