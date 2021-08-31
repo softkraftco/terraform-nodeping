@@ -229,7 +229,6 @@ resource "nodeping_contact" "example"{
 	}
 }
 
-
 resource "nodeping_group" "the_group"{
 	name = "test"
 	members = [nodeping_contact.example.addresses[0].id]
@@ -301,7 +300,6 @@ resource "nodeping_customer" "my_subaccount"{
 	emailme = true
 	status = "Active"
 }
-
 
 resource "nodeping_contact" "my_contact"{
 	customer_id = nodeping_customer.new_subaccount.id
@@ -392,7 +390,6 @@ Here's an example use:
 data "nodeping_customer" "the_customer" {
 	id = var.customer_id
 }
-
 
 output "customer" {
 	value = data.nodeping_customer.the_customer
