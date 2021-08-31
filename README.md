@@ -81,7 +81,7 @@ This provider supports the following type of resources:
 
 #### Accounts
 
-This is an example declaration of `account` resource. Note that Nodeping in their documentation keeps using `Accounts`, but for the declatarion type uses `customer`, that is why  we use `accounts` for documentation purposes, but `nodeping_customer` for the declaration.
+It is an example declaration of `account` resource. Note that Nodeping in their documentation keeps using `Accounts`and for the definition type uses `customer` that is why we use `accounts` for documentation purposes, but `nodeping_customer` for the definition.
 
 ```hcl
 resource "nodeping_customer" "new_subaccount"{
@@ -100,7 +100,7 @@ Please follow the official documentation [API documentation](https://nodeping.co
 - `contactname` represents a name of the primary contact for the subaccount, used as a label.
 - `email` primary email address for the subaccount.
 - `timezone` main time zone for the subaccount.
-- `location` locations for the subaccount, available values: nam, eur, eao, wlw.
+- `location` location for the subaccount, available values: nam, eur, eao, wlw.
 - `emailme` to opt-in the subaccount for NodePing service and features email notifications.
 - `status` subaccount status, available values:  "Active" or "Suspend".
 
@@ -122,17 +122,17 @@ The implementation generally follows [API documentation](https://nodeping.com/do
  - `customer_id` a customer id of the subaccount the check belongs to.
  - `type` string check type, one of: AGENT, AUDIO, CLUSTER, DOHDOT, DNS, FTP, HTTP, HTTPCONTENT, HTTPPARSE, HTTPADV, IMAP4, MYSQL, NTP, PING, POP3, PORT, PUSH, RBL, RDP, SIP, SMTP, SNMP, SPEC10DNS, SPEC10RDDS, SSH, SSL, WEBSOCKET, WHOIS
  - `target` check target. Note that for HTTP, HTTPCONTENT, HTTPPARSE, and HTTPADV check, this must begin with "http://" or "https://".
- - `label` give this check a label. If this is absent, the target will be used as the label.
+ - `label` gives this check a label. If this is absent, the target will be used as the label.
  - `interval` how often this check runs in minutes. Can be any integer starting at 1 for one-minute checks. Once a day is 1440. Defaults to 15.
- - `enabled` set to 'active' to enable this check to run, set to 'inactive' to disable.
+ - `enabled` sets to 'active' to enable this check to run, set to 'inactive' to disable.
 > `enabled` differs from API in that it only accepts strings: 'active', 'inactive', and it defaults to 'active'.
- - `public` set to `true` to enable public reports for this check.
+ - `public` sets to `true` to enable public reports for this check.
 > `public` differs from API in that it uses boolean values instead of strings.
  - `runlocations` an array of geographical regions where probe servers are located. This can be one or more of the following: 'nam' for North America, 'eur' for Europe, 'eao' for East Asia/Oceania, or 'wlw' for worldwide. If omitted, the account's default location setting is used. To run checks on an AGENT, set the location to the ID of the agent check you want to run on.
 > Running checks on an AGENT was never tested
 
 > `runlocations` differs from API in that it only allows array as an input value.
- - `homeloc` set the preferred probe location, home location, for this check. The default is 'false' and will run the check on a random probe in the selected region (see runlocations) or the account default region if no region is specified on the check. The probe two-letter indicators are listed in our FAQ (example: 'ca' would run a check from our California probe). Set this value to 'roam' to have the check change probe location on each interval.
+ - `homeloc` sets the preferred probe location, home location, for this check. The default is 'false' and will run the check on a random probe in the selected region (see runlocations) or the account default region if no region is specified on the check. The probe two-letter indicators are listed in our FAQ (example: 'ca' would run a check from our California probe). Set this value to 'roam' to have the check change probe location on each interval.
 > `homeloc` differs from API in that it will only accept strings. If you need to run the check on a random probe, set this parameter to `"false"` (string).
  - `threshold` the timeout for this check in seconds, defaults to 5 for a five-second timeout. Can be any integer starting at 1. For CLUSTER checks, this indicates how many checks listed in the 'data' element must be passing in order for this check to pass.
  - `sens` number of rechecks before this check is considered 'down' or 'up'. Defaults to 2 (2 rechecks means it will be checked by 3 different servers). Rechecks are run immediately, not based on the interval, and happen when a status change occurs.
@@ -212,8 +212,8 @@ Additional parameters for the webhook notification type:
 
  - `action` defaults to 'get' but can be 'put', 'post', 'head', or 'delete'
  - `data` payload or body of an HTTP POST or PUT request. This can be JSON, XML, or any arbitrary string.
- - `headers` set HTTP request headers
- - `querystrings` set HTTP query string key/values, that will be appended to your webhook URL as part of the query string.
+ - `headers` sets HTTP request headers
+ - `querystrings` sets HTTP query string key/values, that will be appended to your webhook URL as part of the query string.
 
  #### Contactgroups
 
