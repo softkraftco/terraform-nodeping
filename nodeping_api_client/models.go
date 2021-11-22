@@ -140,6 +140,9 @@ func (notification *Notification) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
+	if v["delay"] == nil {
+		v["delay"] = float64(0)
+	}
 	notification.Delay = int(v["delay"].(float64))
 	notification.Schedule = v["schedule"].(string)
 	return nil
